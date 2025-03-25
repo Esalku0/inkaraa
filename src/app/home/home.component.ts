@@ -36,8 +36,8 @@ export class HomeComponent {
   cerrarSesion() {
     this.logService.cerrarSesion();
     location.reload();
-    localStorage.removeItem('token'); // 🔹 Borra el token
-    localStorage.removeItem('rol');   // 🔹 Borra el rol
+    localStorage.removeItem('token'); 
+    localStorage.removeItem('rol');  
   }
 
   comprobarRolUsuario() {

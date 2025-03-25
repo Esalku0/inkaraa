@@ -39,7 +39,14 @@
               <li><a href="#">Ajustes</a></li>
               <li><a href="#">Mis Cosas</a></li>
               <li><a href="#">Mis Reservas</a></li>
-              <li><a href="#">Login</a></li>
+              @if(!rol){
+                <li><a routerLink="/login">Login</a></li>
+              }@else {
+                <li><a routerLink="/home" (click)="cerrarSesion()">Cerrar sesion</a></li>
+              }
+              @if(rol==='2'){
+                <li><a routerLink="/gestionArtista">Gestion</a></li>
+              }  
   
             </ul>
           </li>
@@ -47,10 +54,6 @@
       </nav>
     </div>
   </header>
-  <br>
-  <br>
-  <br>
-
 <section id="artistas-gestion" class="artistas-gestion-section">
     <div class="artistas-tabla">
       <h2>Lista de Artistas</h2>

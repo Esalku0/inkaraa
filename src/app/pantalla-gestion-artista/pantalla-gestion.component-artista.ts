@@ -5,7 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { ArtistasService } from '../service/artistas.service';
 import { Artista, ArtistasMap } from '../POJOs/artistas';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { LoginService } from '../service/login.service';
 
 @Component({
   selector: 'app-pantalla-gestion-artista',
@@ -23,8 +24,23 @@ export class PantallaGestionComponentArtista {
   arratistas: Artista[] = [];
   selectedFile: File | "" = "";
 
+  //Datos para el token de sesión
+    rol: string = '';
+    logService: LoginService = inject(LoginService);
+
+    router:Router = inject(Router);
   constructor(private http: HttpClient) {
-    console.log("asdad");
+    this.rol = this.logService.getRol();
+    console.log(this.rol);
+  }
+
+  cerrarSesion() {
+    this.logService.cerrarSesion();
+    location.reload();
+    localStorage.removeItem('token'); 
+    localStorage.removeItem('rol');  
+    this.router.navigate(['/home']); 
+
   }
 
   //Ojito que esto es importante, basicament le hemos metido esta funcion a un change, para que que cuando se

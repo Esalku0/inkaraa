@@ -23,12 +23,14 @@ export class PantallaGestionComponentArtista {
   newArtista: Artista = { idArtista: 0, nombre: '', apellido: '', alias: '', ciudad: '', foto: '' };
   arratistas: Artista[] = [];
   selectedFile: File | "" = "";
+  tempPass:string="";
+  email: string ="";
 
   //Datos para el token de sesión
-    rol: string = '';
-    logService: LoginService = inject(LoginService);
+  rol: string = '';
+  logService: LoginService = inject(LoginService);
 
-    router:Router = inject(Router);
+  router: Router = inject(Router);
   constructor(private http: HttpClient) {
     this.rol = this.logService.getRol();
     console.log(this.rol);
@@ -37,16 +39,16 @@ export class PantallaGestionComponentArtista {
   cerrarSesion() {
     this.logService.cerrarSesion();
     location.reload();
-    localStorage.removeItem('token'); 
-    localStorage.removeItem('rol');  
-    this.router.navigate(['/home']); 
-
+    localStorage.removeItem('token');
+    localStorage.removeItem('rol');
+    this.router.navigate(['/home']);
   }
 
   //Ojito que esto es importante, basicament le hemos metido esta funcion a un change, para que que cuando se
   //seleccione un archivo se ejecute la funcio, esta funcion basicamente lo que hace es coger el archivo seleccionado
   //y lo guarda en la variable selectedFile
   onFileSelected(event: any): void {
+    console.log("Evento detectado", event);
     console.log("pasa por aqui");
     this.selectedFile = event.target.files[0];
   }
@@ -66,9 +68,11 @@ export class PantallaGestionComponentArtista {
     //preparamos el formData
     const formData = new FormData();
     //al formdata le metemos el objeto artista
-    formData.append('artista', JSON.stringify(this.newArtista)); 
+    formData.append('artista', JSON.stringify(this.newArtista));
     //al formData le metemos la imagen
-    formData.append('image', this.selectedFile); 
+    formData.append('image', this.selectedFile);
+    formData.append('email', this.email);
+    formData.append('tempPass', this.tempPass);
 
     //nada, aqui todo normal, llamamos a nuestro querido observable donde le pasamos el formdata en vez de un obejto
     this.artiService.addArtista(formData).subscribe({

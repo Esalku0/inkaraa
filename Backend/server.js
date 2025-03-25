@@ -204,7 +204,13 @@ app.post("/artistas", upload.single("image"), (req, res) => {
     //que sea la misma que hemos gastado en el middleware de multer si no, no hacmeos na
     const foto = `/assets/artistas/${req.file.filename}`; 
 
+    const tempPass=req.body.tempPass;
+    const email=req.body.email;
+
+    console.log("tempPass ",tempPass);
+
     const query = `INSERT INTO artistas (nombre, apellido, alias, ciudad, foto) VALUES (?, ?, ?, ?, ?)`;
+    const query2 = `INSERT INTO usuarios (nombre, apellidos, email, contrasena, rol) VALUES (?, ?, ?, ?, 3)`;
 
     db.query(query, [nombre, apellido, alias, ciudad, foto], (err, result) => {
       if (err) {
@@ -213,8 +219,18 @@ app.post("/artistas", upload.single("image"), (req, res) => {
       }
       console.log("Artista insertado con éxito:", result);
       //Si llegamos aqui es que funnciona perfectamente, no devolvemos nada
-      res.status(201).json({ mensaje: "Artista creado con éxito", id: result.insertId });
+     // res.status(201).json({ mensaje: "Artista creado con éxito", id: result.insertId });
     });
+    
+    db.query(query2,[nombre,apellido,email,tempPass],(err, result )=>{
+        if (err) {
+          console.error("Error al insertar en la base de datos:", err);
+          return res.status(500).send("Error en el servidor");
+        }
+        console.log("Usuario insertado con éxito:", result);
+        res.status(201).json({mensaje:"Usuario crradro con exito",id:result.insertId});
+    });
+
   } catch (error) {
     console.error("Error al procesar los datos:", error);
     res.status(400).send("Error al procesar la información enviada");

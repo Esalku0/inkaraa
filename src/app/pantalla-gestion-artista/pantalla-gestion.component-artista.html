@@ -84,21 +84,27 @@
       <h2>Gestión de Artistas</h2>
       <form>
         <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" placeholder="Nombre" />
+        <input type="text" [(ngModel)]="this.newArtista.nombre" name="nombre" id="nombre" placeholder="Nombre" />
   
         <label for="apellido">Apellido:</label>
-        <input type="text" id="apellido" placeholder="Apellido" />
+        <input type="text"[(ngModel)]="this.newArtista.apellido" name="apellido"  id="apellido" placeholder="Apellido" />
   
         <label for="alias">Alias:</label>
-        <input type="text" id="alias" placeholder="Alias" />
+        <input type="text"[(ngModel)]="this.newArtista.alias" name="alias" id="alias" placeholder="Alias" />
   
         <label for="ciudad">Ciudad:</label>
-        <input type="text" id="ciudad" placeholder="Ciudad" />
+        <input type="text" [(ngModel)]="this.newArtista.ciudad" name="ciudad"  id="ciudad" placeholder="Ciudad" />
   
+        <label for="email">Email:</label>
+        <input type="email" [(ngModel)]="this.email" name="email"  id="email" placeholder="email" />
+
+        <label for="tempPass">Contraseña TEMPORAL:</label>
+        <input type="password" [(ngModel)]="this.tempPass" name="tempPass"  id="tempPass" placeholder="tempPass" />
+
         <label for="foto">Foto:</label>
-        <input type="file" id="foto" />
-  
-        <button type="submit">Guardar Artista</button>
+        <input type="file" (change)="onFileSelected($event)" id="foto" />
+
+        <button (click)="enviar()">Guardar Artista</button>
       </form>
     </div>
   </section>

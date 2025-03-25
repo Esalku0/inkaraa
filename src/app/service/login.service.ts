@@ -27,6 +27,13 @@ export class LoginService {
   getRol():string {
     return localStorage.getItem('rol')||'';
   }
+  esAdmin(){
+    let ret;
+    if(this.getRol()=='2'){
+      ret= true;
+    }
+    return ret;
+  }
   cerrarSesion() {
     localStorage.clear();
   }

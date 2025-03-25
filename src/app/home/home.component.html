@@ -38,15 +38,25 @@
           <ul class="dropdown-menu">
             <li><a href="#">Ajustes</a></li>
             <li><a href="#">Mis Cosas</a></li>
+            @if(rol!='3'){
             <li><a href="#">Mis Reservas</a></li>
+            }
+            @if(rol==='2'){
+              <li><a routerLink="/gestionArtista">Gestion Artistas</a></li>
+            }
+            @if(rol==='3'){
+              <li><a routerLink="/gestionReservas">Gestion Reservas</a></li>
+            }
+            @if(rol==='3'){
+              <li><a routerLink="/gestionDisenyos">Gestion Diseños</a></li>
+            }
+            
+            
             @if(!rol){
               <li><a routerLink="/login">Login</a></li>
             }@else {
               <li><a routerLink="/home" (click)="cerrarSesion()">Cerrar sesion</a></li>
             }
-            @if(rol==='2'){
-              <li><a routerLink="/gestionArtista">Gestion</a></li>
-            }         
           </ul>
         </li>
       </ul>

@@ -6,6 +6,7 @@ import { VerDisenyosComponent } from './ver-disenyos/ver-disenyos.component';
 import { RegisterComponent } from './register/register.component';
 import { VerArtistasComponent } from './ver-artistas/ver-artistas.component';
 import { PantallaGestionComponentArtista } from './pantalla-gestion-artista/pantalla-gestion.component-artista';
+import { AuthGuard } from '../auth.guard';
 
 export const routes: Routes = [
   
@@ -15,7 +16,6 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'verDisenyos', component: VerDisenyosComponent },
   { path: 'verArtistas', component: VerArtistasComponent },
-  {path: 'gestionArtista', component: PantallaGestionComponentArtista},
-  
+  {path: 'gestionArtista', component: PantallaGestionComponentArtista,canActivate: [AuthGuard]},
   { path: '**', redirectTo: '' },
 ];

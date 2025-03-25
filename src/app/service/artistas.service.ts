@@ -26,5 +26,4 @@ export class ArtistasService {
     return this.httpClient.post(this.API, formData);
   }
   
-
 }

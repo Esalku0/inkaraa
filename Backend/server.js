@@ -37,7 +37,7 @@ db.connect((err) => {
 //para guardar datos en el navegador y poder hacer controles de acceso por rol y demas
 //IMPORTANTE EALIAGA
 //EXPRESS.JSON ES UN MIDDLEWARE QUE NOS PERMITE RECIBIR DATOS EN FORMATO JSON
-app.use(express.json()); 
+app.use(express.json());
 //URLENCODED ES UN MIDDLEWARE QUE NOS PERMITE RECIBIR DATOS DE FORMA FACIL
 //EN EL BODY DE UNA PETICION POST
 //puedes procesar solicitudes con datos codificados en URL, como formularios.
@@ -45,7 +45,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.post("/login", (req, res) => {
   console.log("Intento de login con:", req.body);
-  
+
   const { usuario, pass } = req.body;
   // Consulta SQL corregida
   db.query(
@@ -57,10 +57,11 @@ app.post("/login", (req, res) => {
         return res.status(500).json({ error: "Error en el servidor" });
       }
 
- 
       if (!result || result.length === 0) {
         console.warn("Usuario o contraseña incorrectos");
-        return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
+        return res
+          .status(401)
+          .json({ error: "Usuario o contraseña incorrectos" });
       }
       //RESULT DE 0 SON LOS DATOS QUE NOS DEVUELVE LA CONSULTA SQL
       const user = result[0];
@@ -68,15 +69,13 @@ app.post("/login", (req, res) => {
       //PARA ESO GASTAMOS JWT QUE ES UNA LIBRERIA QUE NOS PERMITE GENERAR TOKENS DE FORMA FACIL
       //PARA ELLO LE PASAMOS LOS DATOS QUE QUEREMOS GUARDAR EN EL TOKEN, EN NUESTRO CASO LE VAMOS
       //A APASAR EL USAURIO Y EL ROL, QUE SON LOS DATOS QUE QUEREMOS VISUALIZAR Y QUE LA CONSULTA NOS DEVUELVE
-      //SI QUEREMOS AÑADIR MAS DATOS, TENDREMOS QUE CONFIGURAR LA CONSULTA SQL PARA QUE NOS DEVUELVA MAS DATOS 
+      //SI QUEREMOS AÑADIR MAS DATOS, TENDREMOS QUE CONFIGURAR LA CONSULTA SQL PARA QUE NOS DEVUELVA MAS DATOS
       //DE ESTA FORMA, PODREMOS TENER EN EL RESULT UN ARRAY CON DICHOS DATOS
       //POR OTRA PARTE TAMBIEN LE PASAMOS UNA CLAVE, QUE ES LA QUE NOS VA A PERMITIR ENCRIPTAR Y DESENCRIPTAR NUESTRO TOKEN
       //LUEGO LE METEMOS UN TIMEOUT QUE SERA EL TIEMPO QUE VA A DURAR EL TOKEN EN NUESTRO LOCALSTORAGE
-      const token = jwt.sign(
-        { id: user.id, rol: user.rol },
-        "mostopapi",
-        { expiresIn: "1h" }
-      );
+      const token = jwt.sign({ id: user.id, rol: user.rol }, "mostopapi", {
+        expiresIn: "1h",
+      });
 
       console.log("Token generado:", token);
       res.json({ token, rol: user.rol });
@@ -152,7 +151,7 @@ app.get("/disenyos/estilos/:idEstilo", (req, res) => {
         res.status(404).send("No se encontraron diseños para este estilo.");
       } else {
         // Si hay resultados, los enviamos como respuesta
-        res.json(results); 
+        res.json(results);
       }
     }
   });
@@ -173,75 +172,68 @@ app.get("/estilos", (req, res) => {
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     // Ruta para subir datos y una imagen
-    cb(null, "../assets/artistas"); 
+    cb(null, "../assets/artistas");
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname)); // Generar un nombre único para evitar conflictos
   },
 });
 const upload = multer({ storage });
+
 //Chequeamos que estamos haciendo un post de artistas, es decir, que estamos subiendo un artista, pero vamos a ejecutar
 //varias cositas, primero vamos a subir la imagen, luego vamos a subir los datos del artista
 app.post("/artistas", upload.single("image"), (req, res) => {
-  console.log("probeta");
   console.log("Contenido de req.body:", req.body);
   console.log("Archivo recibido en req.file:", req.file);
 
   if (!req.file || !req.body.artista) {
-    console.error("Faltan datos: imagen o información del artista");
     return res.status(400).send("Faltan datos en la solicitud");
   }
 
   try {
-    //asignamos el json del artista a una variable
-    const artista = JSON.parse(req.body.artista); 
-    console.log("Artista procesado:", artista);
-
-    //JEFE, aqui estamos asignando a estas varaibles, los valors de artista, que hemos pillado del json
-    //pq se hace asi? pues para ahorrarse el tener que hacer artista.nombre, artista.apellido, etc basicamente xd
+    const artista = JSON.parse(req.body.artista);
     const { nombre, apellido, alias, ciudad } = artista;
-    //importante pq esto va a ser la ruta de la imagen, que se va a guardar en la base de datos,
-    //que sea la misma que hemos gastado en el middleware de multer si no, no hacmeos na
-    const foto = `/assets/artistas/${req.file.filename}`; 
+    const foto = `/assets/artistas/${req.file.filename}`;
+    const tempPass = req.body.tempPass;
+    const email = req.body.email;
 
-    const tempPass=req.body.tempPass;
-    const email=req.body.email;
-
-    console.log("tempPass ",tempPass);
-
-    const query = `INSERT INTO artistas (nombre, apellido, alias, ciudad, foto) VALUES (?, ?, ?, ?, ?)`;
-    const query2 = `INSERT INTO usuarios (nombre, apellidos, email, contrasena, rol) VALUES (?, ?, ?, ?, 3)`;
-
-    db.query(query, [nombre, apellido, alias, ciudad, foto], (err, result) => {
+    // 1. Insertar usuario
+    const query1 = `INSERT INTO usuarios (nombre, apellidos, email, contrasena, rol) VALUES (?, ?, ?, ?, 3)`;
+    db.query(query1, [nombre, apellido, email, tempPass], (err, result) => {
       if (err) {
-        console.error("Error al insertar en la base de datos:", err);
-        return res.status(500).send("Error en el servidor");
+        console.error("Error al insertar usuario:", err);
+        return res.status(500).send("Error al crear usuario");
       }
-      console.log("Artista insertado con éxito:", result);
-      //Si llegamos aqui es que funnciona perfectamente, no devolvemos nada
-     // res.status(201).json({ mensaje: "Artista creado con éxito", id: result.insertId });
-    });
-    
-    db.query(query2,[nombre,apellido,email,tempPass],(err, result )=>{
-        if (err) {
-          console.error("Error al insertar en la base de datos:", err);
-          return res.status(500).send("Error en el servidor");
-        }
-        console.log("Usuario insertado con éxito:", result);
-        res.status(201).json({mensaje:"Usuario crradro con exito",id:result.insertId});
-    });
 
+      const lastId = result.insertId; // ID del usuario recién insertado
+      console.log("Usuario creado con ID:", lastId);
+
+      // 2. Insertar artista vinculado al usuario
+      const query2 = `INSERT INTO artistas (idUsuario, nombre, apellido, alias, ciudad, foto) VALUES (?, ?, ?, ?, ?, ?)`;
+      db.query(
+        query2,
+        [lastId, nombre, apellido, alias, ciudad, foto],
+        (err, result) => {
+          if (err) {
+            console.error("Error al insertar artista:", err);
+            return res.status(500).send("Error al crear artista");
+          }
+
+          console.log("Artista insertado con éxito:", result);
+          res.status(201).send("Artista creado con éxito");
+        }
+      );
+    });
   } catch (error) {
     console.error("Error al procesar los datos:", error);
     res.status(400).send("Error al procesar la información enviada");
   }
 });
+
 //mi middleware timidin, para verificar el token
 //vasicamente vamos a comprobar si tiene token o no, si no tiene, devolvera error.
 //se puede hacer tambien para comprobar roles y eso
-function verificarToken(req,res,next){
-
-}
+function verificarToken(req, res, next) {}
 app.use(verificarToken);
 
 const PORT = 3000;

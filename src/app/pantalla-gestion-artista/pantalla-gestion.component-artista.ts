@@ -38,7 +38,6 @@ export class PantallaGestionComponentArtista {
 
   cerrarSesion() {
     this.logService.cerrarSesion();
-    location.reload();
     localStorage.removeItem('token');
     localStorage.removeItem('rol');
     this.router.navigate(['/home']);

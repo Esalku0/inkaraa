@@ -1,20 +1,66 @@
 <header>
-  <div class="logo">
-    <h1>Inkara</h1>
+  <link
+    href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet"
+  />
+  <div class="container">
+    <div class="logo">
+      <a routerLink="/home"><h1>Inkara</h1></a>
+    </div>
+    <nav>
+      <ul class="nav-links">
+        <li>
+          <a routerLink="/verDisenyos">
+            <mat-icon>style</mat-icon>
+            <span>Diseños</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/verArtistas">
+            <mat-icon>palette</mat-icon>
+            <span>Artistas</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="#contact">
+            <mat-icon>contact_page</mat-icon>
+            <span>Contacto</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="ola">
+            <mat-icon>exit</mat-icon>
+            <span>ola</span>
+          </a>
+        </li>
+        <li class="dropdown">
+          <mat-icon class="dropdown-toggle">menu</mat-icon>
+          <ul class="dropdown-menu">
+            <li><a href="#">Ajustes</a></li>
+            <li><a href="#">Mis Cosas</a></li>
+            <li><a href="#">Mis Reservas</a></li>
+            @if(!rol){
+              <li><a routerLink="/login">Login</a></li>
+            }@else {
+              <li><a routerLink="/home" (click)="cerrarSesion()">Cerrar sesion</a></li>
+            }
+            @if(rol==='2'){
+              <li><a routerLink="/gestionArtista">Gestion</a></li>
+            }  
+
+          </ul>
+        </li>
+      </ul>
+    </nav>
   </div>
-
-  <nav>
-    <a href="#home">Inicio</a>
-    <a href="#galeria">Galería</a>
-    <a href="#artistas">Artistas</a>
-    <a href="#contacto">Contacto</a>
-  </nav>
-
-  <div class="menu-toggle">&#9776;</div>
 </header>
-
+     
+  
 <section id="artistas" class="artistas-section">
   <div class="artistas-container">
+    <br>
+    <br>
+    <br>
     <h2>Conoce a Nuestros Artistas</h2>
     <div class="artistas-grid">
       @for (item of this.arrArtistas; track item.idArtista) {

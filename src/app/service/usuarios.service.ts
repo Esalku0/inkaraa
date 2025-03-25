@@ -1,9 +1,30 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
+import { Usuario } from '../POJOs/usuarios';
 @Injectable({
   providedIn: 'root'
 })
 export class UsuariosService {
 
-  constructor() { }
+  private API = 'http://localhost:3000/usuarios';
+  constructor(private httpClient: HttpClient) {}
+
+  getAllUsuarios() {
+    console.log(this.httpClient.get(this.API));
+    return this.httpClient.get(this.API);
+  }
+  addUsuario(newUser: Usuario){
+    console.log(newUser.contrasena);
+    return this.httpClient.post(this.API,newUser);
+  }
+
+  putUsuario(newUser: Usuario) {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.put(this.API + '/' + newUser.idCliente, newUser, { headers: headers });
+  }
+
+  delete(id: number) {
+    return this.httpClient.delete(this.API + '/' + id);
+  }
+
 }

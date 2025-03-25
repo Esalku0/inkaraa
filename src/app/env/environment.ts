@@ -1,1 +1,1 @@
-export const secretKey = { secretKey: 'AAA' };
+export const secretKey = { secretKey: 'esalkualiaga' };

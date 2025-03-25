@@ -5,6 +5,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { CarrouselImagenesComponent } from '../carrousel-imagenes/carrousel-imagenes.component';
 import { LoginService } from '../service/login.service';
+import { secretKey } from '../env/environment';
+import bcrypt from 'bcryptjs';
+
 @Component({
   selector: 'app-login',
   imports: [   
@@ -22,11 +25,14 @@ export class LoginComponent {
   password: string = '';
  
   logService: LoginService = inject(LoginService);
-  constructor( ) {}
+  constructor( ) {
+
+  }
 
   login() {
     console.log(this.username);
     console.log(this.password);
+    //var dev = this.encryptPassword(this.password);
     this.logService.login(this.username,this.password).subscribe((data:any)=>{
       //Pq justamente estos valores? Pq son los que hemos definido en el backend
       //literalmente es lo que nos devuelve el metodo de login
@@ -35,5 +41,11 @@ export class LoginComponent {
       this.router.navigate(['/']); 
     });
   }
+
+  encryptPassword(password: string) {
+    const salt = bcrypt.genSaltSync(10); // Genera un salt (complejidad 10)
+    return bcrypt.hashSync(password, salt); // Encripta la contraseña
+  }
+
 
 }

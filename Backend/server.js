@@ -3,7 +3,7 @@ const mysql = require("mysql2");
 const cors = require("cors");
 const app = express();
 const path = require("path");
-
+const bcrypt = require("bcryptjs");
 //GESTOR DE IMAGENES
 const multer = require("multer");
 const jwt = require("jsonwebtoken");
@@ -42,45 +42,48 @@ app.use(express.json());
 //EN EL BODY DE UNA PETICION POST
 //puedes procesar solicitudes con datos codificados en URL, como formularios.
 app.use(express.urlencoded({ extended: true }));
-
 app.post("/login", (req, res) => {
   console.log("Intento de login con:", req.body);
 
   const { usuario, pass } = req.body;
-  // Consulta SQL corregida
-  db.query(
-    "SELECT id, rol FROM usuarios WHERE email = ? AND contrasena = ?",
-    [usuario, pass],
-    (err, result) => {
-      if (err) {
-        console.error("Error en la base de datos:", err);
-        return res.status(500).json({ error: "Error en el servidor" });
+
+  db.query("SELECT id, rol, contrasena FROM usuarios WHERE email = ?", [usuario], async (err, result) => {
+    if (err) {
+      console.error("Error en la base de datos:", err);
+      return res.status(500).json({ error: "Error en el servidor" });
+    }
+
+    if (!result || result.length === 0) {
+      console.warn("Usuario no encontrado");
+      return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
+    }
+
+    const user = result[0];
+
+    console.log("Contraseña ingresada:", pass);
+    console.log("Contraseña en BD:", user.contrasena);
+
+    try {
+      // 🔥 Aquí se compara la contraseña en texto plano con la encriptada en la BD
+      const isMatch = await bcrypt.compare(pass, user.contrasena);
+
+      if (!isMatch) {
+        console.warn("Contraseña incorrecta");
+        return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
       }
 
-      if (!result || result.length === 0) {
-        console.warn("Usuario o contraseña incorrectos");
-        return res
-          .status(401)
-          .json({ error: "Usuario o contraseña incorrectos" });
-      }
-      //RESULT DE 0 SON LOS DATOS QUE NOS DEVUELVE LA CONSULTA SQL
-      const user = result[0];
-      //EL TOKEN ES UNA CADENA DE TEXTO QUE NOS PERMITE IDENTIFICAR A UN USUARIO
-      //PARA ESO GASTAMOS JWT QUE ES UNA LIBRERIA QUE NOS PERMITE GENERAR TOKENS DE FORMA FACIL
-      //PARA ELLO LE PASAMOS LOS DATOS QUE QUEREMOS GUARDAR EN EL TOKEN, EN NUESTRO CASO LE VAMOS
-      //A APASAR EL USAURIO Y EL ROL, QUE SON LOS DATOS QUE QUEREMOS VISUALIZAR Y QUE LA CONSULTA NOS DEVUELVE
-      //SI QUEREMOS AÑADIR MAS DATOS, TENDREMOS QUE CONFIGURAR LA CONSULTA SQL PARA QUE NOS DEVUELVA MAS DATOS
-      //DE ESTA FORMA, PODREMOS TENER EN EL RESULT UN ARRAY CON DICHOS DATOS
-      //POR OTRA PARTE TAMBIEN LE PASAMOS UNA CLAVE, QUE ES LA QUE NOS VA A PERMITIR ENCRIPTAR Y DESENCRIPTAR NUESTRO TOKEN
-      //LUEGO LE METEMOS UN TIMEOUT QUE SERA EL TIEMPO QUE VA A DURAR EL TOKEN EN NUESTRO LOCALSTORAGE
+      // Si la contraseña es correcta, generamos el token JWT
       const token = jwt.sign({ id: user.id, rol: user.rol }, "mostopapi", {
         expiresIn: "1h",
       });
 
       console.log("Token generado:", token);
       res.json({ token, rol: user.rol });
+    } catch (error) {
+      console.error("Error al comparar contraseñas:", error);
+      return res.status(500).json({ error: "Error en el servidor" });
     }
-  );
+  });
 });
 
 app.get("/artistas", (req, res) => {
@@ -134,7 +137,7 @@ app.get("/disenyos/:id", (req, res) => {
 
 app.get("/disenyos/estilos/:idEstilo", (req, res) => {
   const { idEstilo } = req.params;
-
+  console.log("ESTILO: " + idEstilo);
   const query = `
       SELECT d.* 
       FROM disenyo_estilos de 
@@ -152,6 +155,7 @@ app.get("/disenyos/estilos/:idEstilo", (req, res) => {
       } else {
         // Si hay resultados, los enviamos como respuesta
         res.json(results);
+        console.log("todo bien");
       }
     }
   });
@@ -167,8 +171,33 @@ app.get("/estilos", (req, res) => {
   });
 });
 
+app.post("/usuarios", async (req, res) => {
+  const { nombre, apellidos, email, contrasena } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(contrasena, 10); // 🔥 Aquí se encripta
+
+    const query =
+      "INSERT INTO usuarios (nombre, apellidos, email, contrasena, rol) VALUES (?, ?, ?, ?, 1)";
+    
+    db.query(query, [nombre, apellidos, email, hashedPassword], (err, result) => {
+      if (err) {
+        console.error("Error en la base de datos:", err);
+        return res.status(500).send("Error en el servidor");
+      }
+
+      res.status(200).json({ message: "Usuario registrado correctamente" });
+    });
+  } catch (error) {
+    console.error("Error encriptando la contraseña:", error);
+    res.status(500).send("Error en el servidor");
+  }
+});
 //OJITO CHAVALIN, USAMOS EL MIDDLEWARE DE MULTER PARA PODER GUARDAR UNA IMAGEN DONDE QUERAMOS.
 //IMPORTANTE EALIAGA
+//esto nos permite asignar de donde visualizar las imagenes, en este caso, la carpeta assets
+app.use("/assets", express.static(path.join(__dirname, "../assets")));
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     // Ruta para subir datos y una imagen
@@ -179,7 +208,6 @@ const storage = multer.diskStorage({
   },
 });
 const upload = multer({ storage });
-
 //Chequeamos que estamos haciendo un post de artistas, es decir, que estamos subiendo un artista, pero vamos a ejecutar
 //varias cositas, primero vamos a subir la imagen, luego vamos a subir los datos del artista
 app.post("/artistas", upload.single("image"), (req, res) => {
@@ -196,7 +224,7 @@ app.post("/artistas", upload.single("image"), (req, res) => {
     const foto = `/assets/artistas/${req.file.filename}`;
     const tempPass = req.body.tempPass;
     const email = req.body.email;
-
+    console.log("Datos del artista:", artista);
     // 1. Insertar usuario
     const query1 = `INSERT INTO usuarios (nombre, apellidos, email, contrasena, rol) VALUES (?, ?, ?, ?, 3)`;
     db.query(query1, [nombre, apellido, email, tempPass], (err, result) => {
@@ -220,7 +248,7 @@ app.post("/artistas", upload.single("image"), (req, res) => {
           }
 
           console.log("Artista insertado con éxito:", result);
-          res.status(201).send("Artista creado con éxito");
+          res.status(200).json({ message: "Artista añadido con éxito" });
         }
       );
     });

@@ -49,12 +49,31 @@ export class VerDisenyosComponent {
     this.estilosService.getAllEstilos().subscribe((data:any)=>{
       this.arrEstilos= new EstilosMap().get(data);
     });
-  }
+  }/*
   cargarDisenyosById(idEstilo:number){
+    console.log("ID ESTILO",idEstilo); 
     this.disenyoService.getAllArtistasByEstilo(idEstilo).subscribe((data:any)=>{
     this.arrDisenyos= new DisenyosMap().get(data);
     });
   }
+    */
+  cargarDisenyosById(idEstilo: number) {
+    console.log("ID ESTILO ENVIADO:", idEstilo); 
+    this.disenyoService.getAllArtistasByEstilo(idEstilo).subscribe((data: any) => {
+        console.log("Datos recibidos:", data);
+        this.arrDisenyos = new DisenyosMap().get(data);
+      },
+      (error) => {
+        if (error.status === 404) {
+          console.warn("No hay diseños para este estilo, mostrando array vacío.");
+          this.arrDisenyos = []; // Evita que Angular lo considere un error
+        } else {
+          console.error("Error al cargar diseños:", error);
+        }
+      }
+    );
+  }
+  
 
   cambiarFiltro(idEstilo: number){
     this.idClickFiltrado=idEstilo;

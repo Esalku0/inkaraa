@@ -9,7 +9,6 @@
 <section class="register-section">
   <div class="register-container">
     <h2>Regístrate</h2>
-    <form (ngSubmit)="onSubmit()" aria-label="Formulario de registro">
       <input
         type="text"
         id="username"
@@ -19,6 +18,15 @@
         [(ngModel)]="this.newUser.nombre"
         aria-label="Nombre de usuario"
       />
+      <input
+      type="text"
+      id="apellido"
+      name="apellido"
+      placeholder="Apellido"
+      required
+      [(ngModel)]="this.newUser.apellidos"
+      aria-label="apellido de usuario"
+    />
       <input
         type="email"
         id="email"
@@ -34,7 +42,7 @@
         name="password"
         placeholder="Contraseña"
         required
-        [(ngModel)]="this.newUser.contrasenya"
+        [(ngModel)]="this.newUser.contrasena"
         aria-label="Contraseña"
       />
       <input
@@ -46,11 +54,10 @@
         [(ngModel)]="confirmPassword"
         aria-label="Confirmar contraseña"
       />
-      <button type="submit" class="cta-button">Registrarse</button>
+      <button type="submit" (click)="enviar()" class="cta-button">Registrarse</button>
       <p class="login-link">
         ¿Ya tienes una cuenta? <a routerLink="/login">Inicia sesión aquí</a>
       </p>
-    </form>
   </div>
 </section>
 

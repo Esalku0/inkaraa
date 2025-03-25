@@ -1,0 +1,61 @@
+<header>
+  <div class="container">
+    <div class="logo">
+      <h1>Tattoo Studio</h1>
+    </div>
+  </div>
+</header>
+
+<section class="register-section">
+  <div class="register-container">
+    <h2>Regístrate</h2>
+    <form (ngSubmit)="onSubmit()" aria-label="Formulario de registro">
+      <input
+        type="text"
+        id="username"
+        name="username"
+        placeholder="Nombre de usuario"
+        required
+        [(ngModel)]="this.newUser.nombre"
+        aria-label="Nombre de usuario"
+      />
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Correo electrónico"
+        required
+        [(ngModel)]="this.newUser.email"
+        aria-label="Correo electrónico"
+      />
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Contraseña"
+        required
+        [(ngModel)]="this.newUser.contrasenya"
+        aria-label="Contraseña"
+      />
+      <input
+        type="password"
+        id="confirm-password"
+        name="confirm-password"
+        placeholder="Confirmar contraseña"
+        required
+        [(ngModel)]="confirmPassword"
+        aria-label="Confirmar contraseña"
+      />
+      <button type="submit" class="cta-button">Registrarse</button>
+      <p class="login-link">
+        ¿Ya tienes una cuenta? <a routerLink="/login">Inicia sesión aquí</a>
+      </p>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-content">
+    <p>&copy; 2025 Tattoo Studio. Todos los derechos reservados.</p>
+  </div>
+</footer>

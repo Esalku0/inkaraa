@@ -1,0 +1,69 @@
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ArtistasService } from '../service/artistas.service';
+import { Artista, ArtistasMap } from '../POJOs/artistas';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterLink, RouterOutlet } from '@angular/router';
+
+@Component({
+  selector: 'app-pantalla-gestion-artista',
+  imports: [CommonModule,
+    FormsModule, MatIconModule,
+    RouterLink,
+    RouterOutlet],
+  templateUrl: './pantalla-gestion.component-artista.html',
+  styleUrl: './pantalla-gestion.component-artista.css',
+})
+
+export class PantallaGestionComponentArtista {
+  artiService: ArtistasService = inject(ArtistasService);
+  newArtista: Artista = { idArtista: 0, nombre: '', apellido: '', alias: '', ciudad: '', foto: '' };
+  arratistas: Artista[] = [];
+  selectedFile: File | "" = "";
+
+  constructor(private http: HttpClient) {
+    console.log("asdad");
+  }
+
+  //Ojito que esto es importante, basicament le hemos metido esta funcion a un change, para que que cuando se
+  //seleccione un archivo se ejecute la funcio, esta funcion basicamente lo que hace es coger el archivo seleccionado
+  //y lo guarda en la variable selectedFile
+  onFileSelected(event: any): void {
+    console.log("pasa por aqui");
+    this.selectedFile = event.target.files[0];
+  }
+
+  //Metodo para enviar y llamar al servicio de artistas, hay que tener en cuenta un par de cositas importantes.
+  //No hemos gastado objeto aqui, ya que al pasarle una imagen y un objeto daba error,
+  //si le pasabamos el objeto entero con la imagen daba error, por lo que hemos tenido que hacerlo de esta manera
+  //con el FormData basicamente enviamos dos cosas, el obejto y la imagen, 
+  //desde el backend se encarga de recogerlo y hacer lo que tenga que hacer
+  enviar() {
+    console.log("Preparando FormData...");
+
+    if (!this.selectedFile) {
+      console.error("No se seleccionó ninguna imagen.");
+      return;
+    }
+    //preparamos el formData
+    const formData = new FormData();
+    //al formdata le metemos el objeto artista
+    formData.append('artista', JSON.stringify(this.newArtista)); 
+    //al formData le metemos la imagen
+    formData.append('image', this.selectedFile); 
+
+    //nada, aqui todo normal, llamamos a nuestro querido observable donde le pasamos el formdata en vez de un obejto
+    this.artiService.addArtista(formData).subscribe({
+      next: (response: any) => {
+        console.log("Artista añadido con éxito:", response);
+      },
+      error: (err: any) => {
+        console.error("Error al añadir artista:", err);
+      },
+    });
+  }
+
+
+}

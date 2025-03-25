@@ -1,0 +1,112 @@
+<header>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <div class="container">
+      <div class="logo">
+        <h1>Inkara</h1>
+      </div>
+      <nav>
+        <ul class="nav-links">
+          <li>
+            <a routerLink="/verDisenyos">
+              <mat-icon>style</mat-icon>
+              <span>Diseños</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="/verArtistas">
+              <mat-icon>palette</mat-icon>
+              <span>Artistas</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="#contact">
+              <mat-icon>contact_page</mat-icon>
+              <span>Contacto</span>
+            </a>
+          </li>
+          <li>
+            <a routerLink="ola">
+              <mat-icon>exit</mat-icon>
+              <span>ola</span>
+            </a>
+          </li>
+          <li class="dropdown">
+            <mat-icon class="dropdown-toggle">menu</mat-icon>
+            <ul class="dropdown-menu">
+              <li><a href="#">Ajustes</a></li>
+              <li><a href="#">Mis Cosas</a></li>
+              <li><a href="#">Mis Reservas</a></li>
+              <li><a href="#">Login</a></li>
+  
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <br>
+  <br>
+  <br>
+
+<section id="artistas-gestion" class="artistas-gestion-section">
+    <div class="artistas-tabla">
+      <h2>Lista de Artistas</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Alias</th>
+            <th>Ciudad</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of arratistas">
+            <td>{{ item.nombre }} {{ item.apellido }}</td>
+            <td>{{ item.alias }}</td>
+            <td>{{ item.ciudad }}</td>
+            <td>
+              <button class="edit-btn">Editar</button>
+              <button class="delete-btn">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <div class="artistas-formulario">
+      <h2>Gestión de Artistas</h2>
+      <form>
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" placeholder="Nombre" />
+  
+        <label for="apellido">Apellido:</label>
+        <input type="text" id="apellido" placeholder="Apellido" />
+  
+        <label for="alias">Alias:</label>
+        <input type="text" id="alias" placeholder="Alias" />
+  
+        <label for="ciudad">Ciudad:</label>
+        <input type="text" id="ciudad" placeholder="Ciudad" />
+  
+        <label for="foto">Foto:</label>
+        <input type="file" id="foto" />
+  
+        <button type="submit">Guardar Artista</button>
+      </form>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2025 Inkara. Todos los derechos reservados.</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+  </footer>
+  

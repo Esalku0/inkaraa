@@ -1,0 +1,38 @@
+<header>
+  <div class="logo">
+    <h1>Inkara</h1>
+  </div>
+
+  <nav>
+    <a href="#home">Inicio</a>
+    <a href="#galeria">Galería</a>
+    <a href="#artistas">Artistas</a>
+    <a href="#contacto">Contacto</a>
+  </nav>
+
+  <div class="menu-toggle">&#9776;</div>
+</header>
+
+<section id="artistas" class="artistas-section">
+  <div class="artistas-container">
+    <h2>Conoce a Nuestros Artistas</h2>
+    <div class="artistas-grid">
+      @for (item of this.arrArtistas; track item.idArtista) {
+      <div class="artista-card">
+        <img src="{{ item.foto }}" alt="{{ item.nombre }} {{ item.apellido }}" />
+        <div class="artista-info">
+          <h3>{{ item.nombre }} {{ item.apellido }}</h3>
+          <p class="alias">{{ item.alias }}</p>
+          <a href="#perfil-artista-{{ item.idArtista }}" class="cta-button">Ver Perfil</a>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-content">
+    <p>&copy; 2025 Inkara Tattoo Studio. Todos los derechos reservados.</p>
+  </div>
+</footer>

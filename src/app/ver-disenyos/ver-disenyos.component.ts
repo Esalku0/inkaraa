@@ -1,0 +1,64 @@
+import { Component, inject } from "@angular/core";
+import { Disenyo, DisenyosMap } from "../POJOs/disenyos";
+import { DisenyosService } from "../service/disenyos.service";
+import { RouterLink, RouterModule, RouterOutlet } from "@angular/router";
+import { FormsModule } from "@angular/forms";
+import { CommonModule } from "@angular/common";
+import { DisenyosEstilosService } from "../service/disenyos-estilos.service";
+import { EstilosService } from "../service/estilos.service";
+import { MatIconModule } from "@angular/material/icon";
+import { Estilos, EstilosMap } from "../POJOs/estilos";
+@Component({
+  selector: "app-ver-disenyos",
+  imports: [
+    FormsModule,
+    CommonModule,
+    RouterLink,
+    RouterModule,
+    RouterOutlet,
+    MatIconModule,
+  ],
+  templateUrl: "./ver-disenyos.component.html",
+  styleUrl: "./ver-disenyos.component.css",
+})
+export class VerDisenyosComponent {
+
+  idClickFiltrado:number=0;
+  arrDisenyos: Disenyo[] = [];
+  arrEstilos: Estilos[] = [];
+
+  disenyoService: DisenyosService = inject(DisenyosService);
+  disenyosEstilosService: DisenyosEstilosService = inject(
+    DisenyosEstilosService
+  );
+  estilosService: EstilosService = inject(EstilosService);
+  
+  constructor() {
+    console.log("asdad");
+    this.cargarDisenyos();
+    this.cargarEstilos();
+  }
+
+  cargarDisenyos() {
+    this.disenyoService.getAllDisenyos().subscribe((data: any) => {
+      this.arrDisenyos = new DisenyosMap().get(data);
+    });
+  }
+
+  cargarEstilos(){
+    this.estilosService.getAllEstilos().subscribe((data:any)=>{
+      this.arrEstilos= new EstilosMap().get(data);
+    });
+  }
+  cargarDisenyosById(idEstilo:number){
+    this.disenyoService.getAllArtistasByEstilo(idEstilo).subscribe((data:any)=>{
+    this.arrDisenyos= new DisenyosMap().get(data);
+    });
+  }
+
+  cambiarFiltro(idEstilo: number){
+    this.idClickFiltrado=idEstilo;
+    console.log(idEstilo);
+    this.cargarDisenyosById(idEstilo);
+  }
+}

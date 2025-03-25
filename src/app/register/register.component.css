@@ -1,0 +1,181 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  background-color: #111;
+  color: #fff;
+}
+
+header {
+  background-color: #222;
+  padding: 20px 0;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.logo h1 {
+  font-size: 48px;
+  font-weight: bold;
+  color: #f39c12;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  text-shadow: 5px 5px 15px rgba(0, 0, 0, 0.8);
+  transform: rotate(-5deg);
+  animation: textGlow 2s ease-in-out infinite alternate;
+}
+
+.register-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.9), rgba(18, 18, 18, 0.9)),
+    url('https://source.unsplash.com/1600x900/?tattoo,ink') center center
+      no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+.register-container {
+  background: rgba(0, 0, 0, 0.75);
+  padding: 40px;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  transform: scale(0.98);
+  animation: slideIn 1s ease-out forwards;
+}
+
+.register-container h2 {
+  margin-bottom: 30px;
+  font-size: 30px;
+  font-weight: bold;
+  color: #f39c12;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  margin: 12px 0;
+  border: none;
+  background-color: #333;
+  color: #fff;
+  border-radius: 10px;
+  font-size: 16px;
+  letter-spacing: 1px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease-in-out;
+}
+
+input::placeholder {
+  color: #bbb;
+}
+
+input:focus {
+  background-color: #444;
+  box-shadow: 0 0 15px rgba(255, 159, 51, 0.7);
+  outline: none;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  background-color: #f39c12;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: all 0.3s ease-in-out;
+}
+
+button:hover {
+  background-color: #e67e22;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 15px rgba(255, 159, 51, 0.6);
+}
+
+.login-link {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.login-link a {
+  color: #f39c12;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+  font-size: 16px;
+  color: #e67e22;
+}
+
+footer {
+  background-color: #222;
+  padding: 20px 0;
+  text-align: center;
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+footer p {
+  font-size: 14px;
+  color: #bbb;
+  letter-spacing: 1px;
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes textGlow {
+  0% {
+    text-shadow: 5px 5px 15px rgba(0, 0, 0, 0.8), 0 0 25px #f39c12,
+      0 0 5px #f39c12;
+  }
+  100% {
+    text-shadow: 5px 5px 25px rgba(0, 0, 0, 0.5), 0 0 35px #f39c12,
+      0 0 15px #f39c12;
+  }
+}
+
+@media (max-width: 768px) {
+  .register-container {
+    width: 85%;
+  }
+
+  .register-container h2 {
+    font-size: 26px;
+  }
+
+  input {
+    font-size: 15px;
+  }
+
+  button {
+    font-size: 18px;
+  }
+}

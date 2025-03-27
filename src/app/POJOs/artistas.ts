@@ -1,3 +1,4 @@
+
 export interface Artista {
   idArtista: number;
   nombre: string;
@@ -6,6 +7,7 @@ export interface Artista {
   ciudad: string;
   foto:string | null;
 }
+
 /*
 export class ArtistasMap {
   get(data: any) {
@@ -27,6 +29,7 @@ export class ArtistasMap {
   }
 }
 */
+
 export class ArtistasMap {
   get(data: any) {
     if (!data) {

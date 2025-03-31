@@ -42,10 +42,5 @@ export class LoginComponent {
     });
   }
 
-  encryptPassword(password: string) {
-    const salt = bcrypt.genSaltSync(10); // Genera un salt (complejidad 10)
-    return bcrypt.hashSync(password, salt); // Encripta la contraseña
-  }
-
 
 }

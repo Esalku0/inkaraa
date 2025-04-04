@@ -29,10 +29,11 @@
         </li>
         <li>
           <a routerLink="ola">
-            <mat-icon>exit</mat-icon>
+            <mat-icon>book</mat-icon>
             <span>ola</span>
           </a>
         </li>
+      @if (tokenNull==true) {
         <li class="dropdown">
           <mat-icon class="dropdown-toggle">menu</mat-icon>
           <ul class="dropdown-menu">
@@ -59,6 +60,10 @@
             }
           </ul>
         </li>
+      }@else {
+        <mat-icon class="dropdown-toggle" routerLink="/login" alt="iniciar sesion">man</mat-icon>
+      }
+
       </ul>
     </nav>
   </div>

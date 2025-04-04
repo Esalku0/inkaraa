@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { Router, RouterModule } from '@angular/router';
 import { UsuariosService } from '../service/usuarios.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -25,6 +26,7 @@ export class RegisterComponent {
   confirmPassword: string = '';
   userService:UsuariosService = inject(UsuariosService);
   router:Router = inject(Router);
+  popup:ToastrService=inject(ToastrService);
 
   constructor() {}
 
@@ -50,4 +52,8 @@ export class RegisterComponent {
     return true;
   }
 
+
+  showSuccess() {
+    this.popup.success('¡Movimiento realizado correctamente!', '¡Perfecto!');
+  }
 }

@@ -121,7 +121,9 @@ header .nav-links .dropdown {
 
 /* Dropdown Toggle Button */
 header .nav-links .dropdown-toggle {
-  font-size: 24px;
+  margin-left: 20px;
+  font-size: 20px;
+  width: 50px;
   color: #fff;
   cursor: pointer;
   padding: 10px 15px;

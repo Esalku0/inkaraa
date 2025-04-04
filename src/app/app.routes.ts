@@ -16,6 +16,6 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'verDisenyos', component: VerDisenyosComponent },
   { path: 'verArtistas', component: VerArtistasComponent },
-  {path: 'gestionArtista', component: PantallaGestionComponentArtista,canActivate: [AuthGuard]},
+  {path: 'gestionArtista', component: PantallaGestionComponentArtista},
   { path: '**', redirectTo: '' },
 ];

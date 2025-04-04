@@ -14,6 +14,7 @@ const jwt = require("jsonwebtoken");
 //CON ESTAS COSITAS, PODEMOS EJECUTAR NUESTRA LOGICA
 //POR OTRA PARTE, EL MIDDLEWARE ES CODIGO QUE SE EJECUTARA ANTES DE LA LLAMADA
 //A UNA RUTA PREDEFINIDA.
+
 app.use(cors());
 //Datos de laconexión
 const db = mysql.createConnection({
@@ -42,6 +43,7 @@ app.use(express.json());
 //EN EL BODY DE UNA PETICION POST
 //puedes procesar solicitudes con datos codificados en URL, como formularios.
 app.use(express.urlencoded({ extended: true }));
+//LOGIN EALIAGA
 app.post("/login", (req, res) => {
   console.log("Intento de login con:", req.body);
 
@@ -176,7 +178,8 @@ app.post("/usuarios", async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash(contrasena, 10); // 🔥 Aquí se encripta
-
+    console.log("cossetes 1 " + contrasena);
+    console.log("cossetes 2 " + hashedPassword);
     const query =
       "INSERT INTO usuarios (nombre, apellidos, email, contrasena, rol) VALUES (?, ?, ?, ?, 1)";
     
@@ -207,27 +210,57 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname)); // Generar un nombre único para evitar conflictos
   },
 });
+
+
+
+
+
+
+
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+//                                              AÑADIR ARTISTAS  A LA BBDD
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
 const upload = multer({ storage });
 //Chequeamos que estamos haciendo un post de artistas, es decir, que estamos subiendo un artista, pero vamos a ejecutar
 //varias cositas, primero vamos a subir la imagen, luego vamos a subir los datos del artista
-app.post("/artistas", upload.single("image"), (req, res) => {
+app.post("/artistas", upload.single("image"), async (req, res) => {
+
   console.log("Contenido de req.body:", req.body);
   console.log("Archivo recibido en req.file:", req.file);
 
+  //COMPROBAMOS SI FALTAN DATOS DEL BODY
   if (!req.file || !req.body.artista) {
     return res.status(400).send("Faltan datos en la solicitud");
   }
 
   try {
+    //Pillamos el artista
     const artista = JSON.parse(req.body.artista);
+    //sacamos los datos del artista!!
     const { nombre, apellido, alias, ciudad } = artista;
     const foto = `/assets/artistas/${req.file.filename}`;
     const tempPass = req.body.tempPass;
     const email = req.body.email;
     console.log("Datos del artista:", artista);
+    console.log("password del artista:", tempPass);
+
     // 1. Insertar usuario
+    const hashedPassword = await bcrypt.hash(tempPass, 10); // 🔥 Aquí se encripta
+    console.log("password del artista encriptada:", hashedPassword);
+
     const query1 = `INSERT INTO usuarios (nombre, apellidos, email, contrasena, rol) VALUES (?, ?, ?, ?, 3)`;
-    db.query(query1, [nombre, apellido, email, tempPass], (err, result) => {
+    db.query(query1, [nombre, apellido, email, hashedPassword], (err, result) => {
       if (err) {
         console.error("Error al insertar usuario:", err);
         return res.status(500).send("Error al crear usuario");

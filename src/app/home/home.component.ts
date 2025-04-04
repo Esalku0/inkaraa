@@ -24,13 +24,20 @@ export class HomeComponent {
 
   probeta: string = 'https://www.lamanuelatattoo.com/';
   rol: string = '';
-
+  tokenNull:boolean=true;
   logService: LoginService = inject(LoginService);
 
 
   constructor() {
     this.rol = this.logService.getRol();
-    console.log(this.rol);
+    if (localStorage.getItem("token")==null || localStorage.getItem("token")=="") {
+        this.tokenNull=false;
+    }else{
+      this.tokenNull=true;
+    }
+    console.log(localStorage.getItem("token"));
+
+    console.log("esta vacio " + this.tokenNull);
   }
 
   cerrarSesion() {

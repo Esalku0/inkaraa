@@ -29,27 +29,40 @@
         </li>
         <li>
           <a routerLink="ola">
-            <mat-icon>exit</mat-icon>
+            <mat-icon>book</mat-icon>
             <span>ola</span>
           </a>
         </li>
-        <li class="dropdown">
-          <mat-icon class="dropdown-toggle">menu</mat-icon>
-          <ul class="dropdown-menu">
-            <li><a href="#">Ajustes</a></li>
-            <li><a href="#">Mis Cosas</a></li>
-            <li><a href="#">Mis Reservas</a></li>
-            @if(!rol){
-              <li><a routerLink="/login">Login</a></li>
-            }@else {
-              <li><a routerLink="/home" (click)="cerrarSesion()">Cerrar sesion</a></li>
-            }
-            @if(rol==='2'){
-              <li><a routerLink="/gestionArtista">Gestion</a></li>
-            }  
-
-          </ul>
-        </li>
+        @if (tokenNull==true) {
+          <li class="dropdown">
+            <mat-icon class="dropdown-toggle">menu</mat-icon>
+            <ul class="dropdown-menu">
+              <li><a href="#">Ajustes</a></li>
+              <li><a href="#">Mis Cosas</a></li>
+              @if(rol!='3'){
+              <li><a href="#">Mis Reservas</a></li>
+              }
+              @if(rol==='2'){
+                <li><a routerLink="/gestionArtista">Gestion Artistas</a></li>
+              }
+              @if(rol==='3'){
+                <li><a routerLink="/gestionReservas">Gestion Reservas</a></li>
+              }
+              @if(rol==='3'){
+                <li><a routerLink="/gestionDisenyos">Gestion Diseños</a></li>
+              }
+              
+              
+              @if(!rol){
+                <li><a routerLink="/login">Login</a></li>
+              }@else {
+                <li><a routerLink="/home" (click)="cerrarSesion()">Cerrar sesion</a></li>
+              }
+            </ul>
+          </li>
+        }@else {
+          <mat-icon class="dropdown-toggle" routerLink="/login" alt="iniciar sesion">man</mat-icon>
+        }
       </ul>
     </nav>
   </div>
@@ -69,7 +82,7 @@
         <div class="artista-info">
           <h3>{{ item.nombre }} {{ item.apellido }}</h3>
           <p class="alias">{{ item.alias }}</p>
-          <a href="#perfil-artista-{{ item.idArtista }}" class="cta-button">Ver Perfil</a>
+          <a href="#perfil-artista-{{ item.idArtista }}" class="cta-button" routerLink="/verArtista/{{item.idArtista}}">Ver Perfil</a>
         </div>
       </div>
       }

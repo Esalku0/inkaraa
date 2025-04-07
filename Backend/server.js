@@ -49,43 +49,51 @@ app.post("/login", (req, res) => {
 
   const { usuario, pass } = req.body;
 
-  db.query("SELECT id, rol, contrasena FROM usuarios WHERE email = ?", [usuario], async (err, result) => {
-    if (err) {
-      console.error("Error en la base de datos:", err);
-      return res.status(500).json({ error: "Error en el servidor" });
-    }
-
-    if (!result || result.length === 0) {
-      console.warn("Usuario no encontrado");
-      return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
-    }
-
-    const user = result[0];
-
-    console.log("Contraseña ingresada:", pass);
-    console.log("Contraseña en BD:", user.contrasena);
-
-    try {
-      // 🔥 Aquí se compara la contraseña en texto plano con la encriptada en la BD
-      const isMatch = await bcrypt.compare(pass, user.contrasena);
-
-      if (!isMatch) {
-        console.warn("Contraseña incorrecta");
-        return res.status(401).json({ error: "Usuario o contraseña incorrectos" });
+  db.query(
+    "SELECT id, rol, contrasena FROM usuarios WHERE email = ?",
+    [usuario],
+    async (err, result) => {
+      if (err) {
+        console.error("Error en la base de datos:", err);
+        return res.status(500).json({ error: "Error en el servidor" });
       }
 
-      // Si la contraseña es correcta, generamos el token JWT
-      const token = jwt.sign({ id: user.id, rol: user.rol }, "mostopapi", {
-        expiresIn: "1h",
-      });
+      if (!result || result.length === 0) {
+        console.warn("Usuario no encontrado");
+        return res
+          .status(401)
+          .json({ error: "Usuario o contraseña incorrectos" });
+      }
 
-      console.log("Token generado:", token);
-      res.json({ token, rol: user.rol,id:user.id });
-    } catch (error) {
-      console.error("Error al comparar contraseñas:", error);
-      return res.status(500).json({ error: "Error en el servidor" });
+      const user = result[0];
+
+      console.log("Contraseña ingresada:", pass);
+      console.log("Contraseña en BD:", user.contrasena);
+
+      try {
+        // 🔥 Aquí se compara la contraseña en texto plano con la encriptada en la BD
+        const isMatch = await bcrypt.compare(pass, user.contrasena);
+
+        if (!isMatch) {
+          console.warn("Contraseña incorrecta");
+          return res
+            .status(401)
+            .json({ error: "Usuario o contraseña incorrectos" });
+        }
+
+        // Si la contraseña es correcta, generamos el token JWT
+        const token = jwt.sign({ id: user.id, rol: user.rol }, "mostopapi", {
+          expiresIn: "1h",
+        });
+
+        console.log("Token generado:", token);
+        res.json({ token, rol: user.rol, id: user.id });
+      } catch (error) {
+        console.error("Error al comparar contraseñas:", error);
+        return res.status(500).json({ error: "Error en el servidor" });
+      }
     }
-  });
+  );
 });
 
 app.get("/artistas", (req, res) => {
@@ -163,6 +171,27 @@ app.get("/disenyos/estilos/:idEstilo", (req, res) => {
   });
 });
 
+app.get("/disenyos/artistas/:idArtista", (req, res) => {
+  console.log("ENTREM EN ARTISTAS IDARTISTA");
+  const {idArtista} = req.params;
+  const query = "SELECT * from disenyos where idArtista = ?";
+  db.query(query, [idArtista], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Error en la base de datos");
+    } else {
+      // Verificamos si hay resultados
+      if (results.length === 0) {
+        res.status(404).send("No se encontraron diseños para este artista.");
+      } else {
+        // Si hay resultados, los enviamos como respuesta
+        res.json(results);
+        console.log("todo bien");
+      }
+    }
+  });
+});
+
 app.get("/estilos", (req, res) => {
   db.query("SELECT * FROM estilos", (err, results) => {
     if (err) {
@@ -173,20 +202,20 @@ app.get("/estilos", (req, res) => {
   });
 });
 
-app.get("/usuarios",async (req,res)=>{
-  db.query("SELECT * FROM usuarios where rol NOT LIKE 2",(err, results) =>{
+app.get("/usuarios", async (req, res) => {
+  db.query("SELECT * FROM usuarios where rol NOT LIKE 2", (err, results) => {
     if (err) {
       console.error("Error al ejecutar la consulta:", err);
       return res.status(500).send("Error en el servidor");
-    }else{
+    } else {
       res.json(results);
     }
   });
 });
-app.delete("/usuarios/:id",async (req,res)=>{
-  db.query("DELETE FROM usuarios where id= ? ",[req.params.id],err=>{
+app.delete("/usuarios/:id", async (req, res) => {
+  db.query("DELETE FROM usuarios where id= ? ", [req.params.id], (err) => {
     if (err) return res.status(500).send(err); // Manejo de errores al eliminar.
-    res.sendStatus(200); 
+    res.sendStatus(200);
   });
 });
 
@@ -199,15 +228,19 @@ app.post("/usuarios", async (req, res) => {
     console.log("cossetes 2 " + hashedPassword);
     const query =
       "INSERT INTO usuarios (nombre, apellidos, email, contrasena, rol) VALUES (?, ?, ?, ?, 1)";
-    
-    db.query(query, [nombre, apellidos, email, hashedPassword], (err, result) => {
-      if (err) {
-        console.error("Error en la base de datos:", err);
-        return res.status(500).send("Error en el servidor");
-      }
 
-      res.status(200).json({ message: "Usuario registrado correctamente" });
-    });
+    db.query(
+      query,
+      [nombre, apellidos, email, hashedPassword],
+      (err, result) => {
+        if (err) {
+          console.error("Error en la base de datos:", err);
+          return res.status(500).send("Error en el servidor");
+        }
+
+        res.status(200).json({ message: "Usuario registrado correctamente" });
+      }
+    );
   } catch (error) {
     console.error("Error encriptando la contraseña:", error);
     res.status(500).send("Error en el servidor");
@@ -228,7 +261,6 @@ const storage = multer.diskStorage({
   },
 });
 
-
 const upload = multer({ storage });
 
 //-----------------------------------------------------------------------------------------------------------------------------
@@ -242,9 +274,8 @@ const upload = multer({ storage });
 //-----------------------------------------------------------------------------------------------------------------------------
 
 app.post("/disenyos", upload.single("image"), async (req, res) => {
-
   console.log("Contenido de req.body:", req.body);
-  console.log("morcilla",  req.body.disenyo);
+  console.log("morcilla", req.body.disenyo);
   console.log("Contenido de req.body:", req.body.filename);
 
   console.log("Archivo recibido en req.file:", req.file);
@@ -258,30 +289,31 @@ app.post("/disenyos", upload.single("image"), async (req, res) => {
     //Pillamos el artista
     const disenyo = JSON.parse(req.body.disenyo);
     //sacamos los datos del artista!!
-    const {imgDisenyo, descrip,idArtista,fechaCreacion}=disenyo;
+    const { imgDisenyo, descrip, idArtista, fechaCreacion } = disenyo;
 
     const foto = `/assets/disenyos/${req.file.filename}`;
 
     console.log("Datos del disenyo:", disenyo);
 
     const query1 = `INSERT INTO disenyos (imgDisenyo, descrip, idArtista, fechaCreacion) VALUES (?, ?, ?, ?)`;
-    db.query(query1, [foto, descrip, idArtista, fechaCreacion], (err, result) => {
-      if (err) {
-        console.error("Error al insertar disenyo:", err);
-        return res.status(500).send("Error al crear disenyo");
-      }
+    db.query(
+      query1,
+      [foto, descrip, idArtista, fechaCreacion],
+      (err, result) => {
+        if (err) {
+          console.error("Error al insertar disenyo:", err);
+          return res.status(500).send("Error al crear disenyo");
+        }
 
-      const lastId = result.insertId; // ID del usuario recién insertado
-      console.log("disenyo creado con ID:", lastId);
-    });
+        const lastId = result.insertId; // ID del usuario recién insertado
+        console.log("disenyo creado con ID:", lastId);
+      }
+    );
   } catch (error) {
     console.error("Error al procesar los datos:", error);
     res.status(400).send("Error al procesar la información enviada");
   }
 });
-
-
-
 
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
@@ -293,8 +325,6 @@ app.post("/disenyos", upload.single("image"), async (req, res) => {
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
 
-
-
 const storage2 = multer.diskStorage({
   destination: (req, file, cb) => {
     // Ruta para subir datos y una imagen
@@ -305,15 +335,11 @@ const storage2 = multer.diskStorage({
   },
 });
 
-
 const upload2 = multer({ storage });
-
-
 
 //Chequeamos que estamos haciendo un post de artistas, es decir, que estamos subiendo un artista, pero vamos a ejecutar
 //varias cositas, primero vamos a subir la imagen, luego vamos a subir los datos del artista
 app.post("/artistas", upload2.single("image"), async (req, res) => {
-
   console.log("Contenido de req.body:", req.body);
   console.log("Archivo recibido en req.file:", req.file);
 
@@ -338,31 +364,35 @@ app.post("/artistas", upload2.single("image"), async (req, res) => {
     console.log("password del artista encriptada:", hashedPassword);
 
     const query1 = `INSERT INTO usuarios (nombre, apellidos, email, contrasena, rol) VALUES (?, ?, ?, ?, 3)`;
-    db.query(query1, [nombre, apellido, email, hashedPassword], (err, result) => {
-      if (err) {
-        console.error("Error al insertar usuario:", err);
-        return res.status(500).send("Error al crear usuario");
-      }
-
-      const lastId = result.insertId; // ID del usuario recién insertado
-      console.log("Usuario creado con ID:", lastId);
-
-      // 2. Insertar artista vinculado al usuario
-      const query2 = `INSERT INTO artistas (idUsuario, nombre, apellido, alias, ciudad, foto) VALUES (?, ?, ?, ?, ?, ?)`;
-      db.query(
-        query2,
-        [lastId, nombre, apellido, alias, ciudad, foto],
-        (err, result) => {
-          if (err) {
-            console.error("Error al insertar artista:", err);
-            return res.status(500).send("Error al crear artista");
-          }
-
-          console.log("Artista insertado con éxito:", result);
-          res.status(200).json({ message: "Artista añadido con éxito" });
+    db.query(
+      query1,
+      [nombre, apellido, email, hashedPassword],
+      (err, result) => {
+        if (err) {
+          console.error("Error al insertar usuario:", err);
+          return res.status(500).send("Error al crear usuario");
         }
-      );
-    });
+
+        const lastId = result.insertId; // ID del usuario recién insertado
+        console.log("Usuario creado con ID:", lastId);
+
+        // 2. Insertar artista vinculado al usuario
+        const query2 = `INSERT INTO artistas (idUsuario, nombre, apellido, alias, ciudad, foto) VALUES (?, ?, ?, ?, ?, ?)`;
+        db.query(
+          query2,
+          [lastId, nombre, apellido, alias, ciudad, foto],
+          (err, result) => {
+            if (err) {
+              console.error("Error al insertar artista:", err);
+              return res.status(500).send("Error al crear artista");
+            }
+
+            console.log("Artista insertado con éxito:", result);
+            res.status(200).json({ message: "Artista añadido con éxito" });
+          }
+        );
+      }
+    );
   } catch (error) {
     console.error("Error al procesar los datos:", error);
     res.status(400).send("Error al procesar la información enviada");
@@ -376,9 +406,8 @@ function verificarToken(req, res, next) {}
 app.use(verificarToken);
 app.get("/", (req, res) => {
   res.send("¡Servidor corriendo! Bienvenido a la API.");
-  next(); 
+  next();
 });
-
 
 const PORT = 3000;
 app.listen(PORT, () => {

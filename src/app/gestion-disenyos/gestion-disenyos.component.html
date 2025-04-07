@@ -83,10 +83,9 @@
 
             @for(item of this.arrDisenyos; track item.idDisenyo){
               <div class="gallery-item style1">
-                <img src="design1.jpg" alt="Diseño 1" />
+                <img src={{item.imgDisenyo}} alt="Diseño 1" />
                 <div class="info">
-                  <h3>{{item.idDisenyo}}</h3>
-                  <p>{{item.descrip}}</p>
+                    <button>Borrar</button>
                 </div>
               </div>
             }
@@ -96,9 +95,8 @@
     <!-- Formulario de registro -->
     <div class="register-form">
       <div class="logo-container">
-        <img src="http://localhost:3000/assets/FORILogoRedi.png" alt="MDN" />
       </div>
-      <h1>Añadir Proyecto</h1>
+      <h1>Añadir a mis Diseños</h1>
 
       <input type="date" [(ngModel)]="this.newDisenyo.fechaCreacion"/>
       <input

@@ -67,14 +67,15 @@
 
         @for(item of this.arrDisenyos; track item.idDisenyo){
           <div class="gallery-item style1">
-            <img src="design1.jpg" alt="Diseño 1" />
+            <img src={{item.imgDisenyo}} alt="Diseño 1" />
             <div class="info">
               <h3>{{item.idDisenyo}}</h3>
               <p>{{item.descrip}}</p>
             </div>
           </div>
         }
-      </div>
+    </div>
+
   </div>
 </section>
 <a routerLink="/reserva" class="floating-button">Reserva Ahora</a>

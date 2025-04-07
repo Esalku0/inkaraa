@@ -10,7 +10,6 @@ import { EstilosService } from '../service/estilos.service';
 import { Disenyo, DisenyosMap } from '../POJOs/disenyos';
 import { DisenyosService } from '../service/disenyos.service';
 import { Artista } from '../POJOs/artistas';
-
 @Component({
   selector: 'app-gestion-disenyos',
   imports: [CommonModule,
@@ -39,18 +38,31 @@ export class GestionDisenyosComponent {
 
 
   tokenNull = false;
-  rol = '2';
+  rol: string = '';
 
   disenyoService: DisenyosService = inject(DisenyosService);
 
   constructor() {
     console.log("asdad");
-    this.cargarDisenyos();
+    const idtemp = parseInt(localStorage.getItem("id") ?? "0");
+    this.cargarDisenyosById(idtemp);
+    this.rol = localStorage.getItem("rol") ?? "0";
+
+    if (localStorage.getItem("token") == null) {
+      this.tokenNull == false;
+    } else {
+      this.tokenNull == true;
+    }
   }
 
-  cargarDisenyos() {
-    this.disenyoService.getAllDisenyos().subscribe((data: any) => {
+  cargarDisenyosById(id: number) {
+    this.disenyoService.getAllArtistasByIdArtista(id).subscribe((data: any) => {
       this.arrDisenyos = new DisenyosMap().get(data);
+
+      for (let item of this.arrDisenyos) {
+        item.imgDisenyo = `http://localhost:3000${item.imgDisenyo}`;
+
+      }
     });
   }
 
@@ -61,7 +73,7 @@ export class GestionDisenyosComponent {
 
   enviarDisenyo() {
     console.log("Preparando FormData...");
-    this.newDisenyo.idArtista= parseInt(localStorage.getItem("id")??"48");
+    this.newDisenyo.idArtista = parseInt(localStorage.getItem("id") ?? "48");
     console.log("AÇO QUE ES?? PUES LO BO JAJAJA" + this.newDisenyo.idArtista);
 
     if (!this.selectedFile) {
@@ -80,6 +92,8 @@ export class GestionDisenyosComponent {
       next: (response: any) => {
         console.log("disenyo añadido con éxito:", response);
         this.vaciarDisenyo();
+        const idtemp = parseInt(localStorage.getItem("id") ?? "0");
+        this.cargarDisenyosById(idtemp);
       },
       error: (err: any) => {
         console.error("Error al añadir artista:", err);

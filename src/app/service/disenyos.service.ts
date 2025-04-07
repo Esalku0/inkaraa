@@ -15,17 +15,17 @@ export class DisenyosService {
     return this.httpClient.get(this.API);
   }
 
-  getAllArtistasById(id: number) {
-    console.log('este es el id a buscar ' + id);
-    return this.httpClient.get(this.API + '/' + id);
+  getAllArtistasByIdArtista(idArtista: number) {
+    console.log(this.API + '/artistas/' + idArtista);
+    return this.httpClient.get(this.API + '/artistas/' + idArtista);
   }
 
-  getAllArtistasByEstilo(idEstilo: number) {
+  getAllDisenyosByEstilo(idEstilo: number) {
     console.log('este es el id a buscar ' + idEstilo);
     return this.httpClient.get(this.API + '/estilos/' + idEstilo);
   }
 
-  postDisenyo(formData: FormData) {
+postDisenyo(formData: FormData) {
     console.log("FormData antes de enviarse:");
     
     formData.forEach((value, key) => {

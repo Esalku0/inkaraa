@@ -17,8 +17,11 @@ export class ArtistasService {
     console.log('este es el id a buscar ' + id);
     return this.httpClient.get(this.API + '/' + id);
   }
-  getArtistasByEstilo(id: number) {}
 
+  getAllArtistasByEstilo(idEstilo: number) {
+    console.log('este es el id a buscar ' + idEstilo);
+    return this.httpClient.get(this.API + '/estilos/' + idEstilo);
+  }
   
   addArtista(formData: FormData) {
     console.log(formData);

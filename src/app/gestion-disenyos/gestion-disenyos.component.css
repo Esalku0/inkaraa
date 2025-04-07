@@ -63,6 +63,7 @@ body {
   
   /* Contenedor principal */
   .register-container {
+    
     display: flex;
     width: 90%;
     max-width: 1800px;
@@ -155,6 +156,12 @@ body {
     flex-direction: column;
     align-items: center; /* Centrar contenido */
     justify-content: center; /* Centrar contenido verticalmente */
+    
+    flex: 0.5;
+    background: rgba(0, 0, 0, 0.75);
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    height: 700px; 
   }
   
   .logo-container {
@@ -168,9 +175,7 @@ body {
     margin-bottom: 20px;
     width: 100%; /* Ajustar el tamaño */
   }
-  .logo img{
-    width: 300px;
-  }
+
   
   .register-form h1 {
     font-size: 28px;
@@ -448,5 +453,64 @@ body {
   header .nav-links .dropdown-menu li a i {
     font-size: 20px;
     color: #f39c12;
+  }
+  
+/* Galería */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 30px;
+    justify-items: center;
+  }
+  
+  .gallery-item {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 20px;
+    box-shadow: 0 10px 60px rgba(0, 0, 0, 0.6);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .gallery-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 60px rgba(0, 0, 0, 0.7);
+  }
+  
+  
+  .gallery-item .info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    text-align: center;
+    transition: opacity 0.3s ease;
+  }
+  
+  .gallery-item:hover .info {
+    opacity: 1;
+  }
+  
+  .gallery-item .info h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: #f39c12;
+  }
+  
+  .gallery-item .info p {
+    font-size: 18px;
+    font-weight: 300;
   }
   

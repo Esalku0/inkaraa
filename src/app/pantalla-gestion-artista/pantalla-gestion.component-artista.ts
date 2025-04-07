@@ -90,6 +90,7 @@ export class PantallaGestionComponentArtista {
     this.artiService.addArtista(formData).subscribe({
       next: (response: any) => {
         console.log("Artista añadido con éxito:", response);
+        this.cargarTodosUsuario();
         this.vaciarUsuario();
       },
       error: (err: any) => {

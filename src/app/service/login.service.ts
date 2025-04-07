@@ -16,9 +16,11 @@ export class LoginService {
   }
 
   //metodo al que posteriormente, llamaremos para asignar el token y el rol
-  setSessionStorage(token: string, rol: string) {
+  setSessionStorage(token: string, rol: string, id:string) {
     localStorage.setItem('token', token);
     localStorage.setItem('rol', rol);
+    localStorage.setItem('id', id);
+
   }
 
   //para tener en cuenta localsotrage es la memoria qure se guarda en el navegador

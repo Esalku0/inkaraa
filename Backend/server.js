@@ -80,7 +80,7 @@ app.post("/login", (req, res) => {
       });
 
       console.log("Token generado:", token);
-      res.json({ token, rol: user.rol });
+      res.json({ token, rol: user.rol,id:user.id });
     } catch (error) {
       console.error("Error al comparar contraseñas:", error);
       return res.status(500).json({ error: "Error en el servidor" });
@@ -221,7 +221,7 @@ app.use("/assets", express.static(path.join(__dirname, "../assets")));
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     // Ruta para subir datos y una imagen
-    cb(null, "../assets/artistas");
+    cb(null, "../assets/disenyos");
   },
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname)); // Generar un nombre único para evitar conflictos
@@ -229,7 +229,56 @@ const storage = multer.diskStorage({
 });
 
 
+const upload = multer({ storage });
 
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+//                                              SUBIR DISEÑO A LA BBDD
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+
+app.post("/disenyos", upload.single("image"), async (req, res) => {
+
+  console.log("Contenido de req.body:", req.body);
+  console.log("morcilla",  req.body.disenyo);
+  console.log("Contenido de req.body:", req.body.filename);
+
+  console.log("Archivo recibido en req.file:", req.file);
+
+  //COMPROBAMOS SI FALTAN DATOS DEL BODY
+  if (!req.file || !req.body.disenyo) {
+    return res.status(400).send("Faltan datos en la solicitud");
+  }
+
+  try {
+    //Pillamos el artista
+    const disenyo = JSON.parse(req.body.disenyo);
+    //sacamos los datos del artista!!
+    const {imgDisenyo, descrip,idArtista,fechaCreacion}=disenyo;
+
+    const foto = `/assets/disenyos/${req.file.filename}`;
+
+    console.log("Datos del disenyo:", disenyo);
+
+    const query1 = `INSERT INTO disenyos (imgDisenyo, descrip, idArtista, fechaCreacion) VALUES (?, ?, ?, ?)`;
+    db.query(query1, [foto, descrip, idArtista, fechaCreacion], (err, result) => {
+      if (err) {
+        console.error("Error al insertar disenyo:", err);
+        return res.status(500).send("Error al crear disenyo");
+      }
+
+      const lastId = result.insertId; // ID del usuario recién insertado
+      console.log("disenyo creado con ID:", lastId);
+    });
+  } catch (error) {
+    console.error("Error al procesar los datos:", error);
+    res.status(400).send("Error al procesar la información enviada");
+  }
+});
 
 
 
@@ -246,12 +295,24 @@ const storage = multer.diskStorage({
 
 
 
+const storage2 = multer.diskStorage({
+  destination: (req, file, cb) => {
+    // Ruta para subir datos y una imagen
+    cb(null, "../assets/artistas");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Generar un nombre único para evitar conflictos
+  },
+});
 
 
-const upload = multer({ storage });
+const upload2 = multer({ storage });
+
+
+
 //Chequeamos que estamos haciendo un post de artistas, es decir, que estamos subiendo un artista, pero vamos a ejecutar
 //varias cositas, primero vamos a subir la imagen, luego vamos a subir los datos del artista
-app.post("/artistas", upload.single("image"), async (req, res) => {
+app.post("/artistas", upload2.single("image"), async (req, res) => {
 
   console.log("Contenido de req.body:", req.body);
   console.log("Archivo recibido en req.file:", req.file);

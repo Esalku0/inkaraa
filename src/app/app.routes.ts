@@ -18,6 +18,10 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'verDisenyos', component: VerDisenyosComponent },
   { path: 'verArtistas', component: VerArtistasComponent },
+  { path: 'gestionDisenyos', component: GestionDisenyosComponent },
+  { path: 'gestionReservas', component: GestionReservasComponent },
+  { path: 'verArtista/:id', component: PerfilArtistasComponent },
   { path: 'gestionArtista', component: PantallaGestionComponentArtista,canActivate: [AuthGuard] },
   { path: '**', redirectTo: '' },
 ];
+

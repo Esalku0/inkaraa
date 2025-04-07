@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Disenyo } from '../POJOs/disenyos';
 
 @Injectable({
   providedIn: 'root',
@@ -24,5 +25,16 @@ export class DisenyosService {
     return this.httpClient.get(this.API + '/estilos/' + idEstilo);
   }
 
+  postDisenyo(formData: FormData) {
+    console.log("FormData antes de enviarse:");
+    
+    formData.forEach((value, key) => {
+        console.log(`${key}:`, value);
+    });
+
+    return this.httpClient.post(this.API, formData);
+}
+
+  
 
 }

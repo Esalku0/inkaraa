@@ -28,6 +28,7 @@ export class VerArtistasComponent {
   logService: LoginService = inject(LoginService);
   artiService: ArtistasService = inject(ArtistasService);
 
+  tokenNull=false;
   constructor() {
     this.getArtistas();
     this.rol = this.logService.getRol();

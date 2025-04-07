@@ -3,7 +3,7 @@ export interface Disenyo {
   imgDisenyo: string;
   descrip: string;
   idArtista: number;
-  fechaCreacion: Date;
+  fechaCreacion: Date | undefined;
 }
 
 export class DisenyosMap {

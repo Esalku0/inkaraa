@@ -37,7 +37,7 @@ export class LoginComponent {
       //Pq justamente estos valores? Pq son los que hemos definido en el backend
       //literalmente es lo que nos devuelve el metodo de login
       //se lo pasamos directamente a la funcion de session storage
-      this.logService.setSessionStorage(data.token,data.rol);
+      this.logService.setSessionStorage(data.token,data.rol,data.id);
       this.router.navigate(['/']); 
     });
   }

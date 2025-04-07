@@ -1,1 +1,118 @@
-<p>gestion-disenyos works!</p>
+<header>
+  <link
+    href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet"
+  />
+  <div class="container">
+    <div class="logo">
+      <h1>Inkara</h1>
+    </div>
+    <nav>
+      <ul class="nav-links">
+        <li>
+          <a routerLink="/verDisenyos">
+            <mat-icon>style</mat-icon>
+            <span>Diseños</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/verArtistas">
+            <mat-icon>palette</mat-icon>
+            <span>Artistas</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="#contact">
+            <mat-icon>contact_page</mat-icon>
+            <span>Contacto</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="ola">
+            <mat-icon>book</mat-icon>
+            <span>ola</span>
+          </a>
+        </li>
+        @if (tokenNull==true) {
+        <li class="dropdown">
+          <mat-icon class="dropdown-toggle">menu</mat-icon>
+          <ul class="dropdown-menu">
+            <li><a href="#">Ajustes</a></li>
+            <li><a href="#">Mis Cosas</a></li>
+            @if(rol!='3'){
+            <li><a href="#">Mis Reservas</a></li>
+            } @if(rol==='2'){
+            <li><a routerLink="/gestionArtista">Gestion Artistas</a></li>
+            } @if(rol==='3'){
+            <li><a routerLink="/gestionReservas">Gestion Reservas</a></li>
+            } @if(rol==='3'){
+            <li><a routerLink="/gestionDisenyos">Gestion Diseños</a></li>
+            } @if(!rol){
+            <li><a routerLink="/login">Login</a></li>
+            }@else {
+            <li>
+              <a routerLink="/home" (click)="cerrarSesion()">Cerrar sesion</a>
+            </li>
+            }
+          </ul>
+        </li>
+        }@else {
+        <mat-icon
+          class="dropdown-toggle"
+          routerLink="/login"
+          alt="iniciar sesion"
+          >man</mat-icon
+        >
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<body>
+  <!-- Botón de volver -->
+  <div class="back-button">
+    <div class="textiUser"></div>
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="register-container">
+    <!-- Tabla de usuarios -->
+    <div class="users-table">
+        <div class="gallery">
+
+            @for(item of this.arrDisenyos; track item.idDisenyo){
+              <div class="gallery-item style1">
+                <img src="design1.jpg" alt="Diseño 1" />
+                <div class="info">
+                  <h3>{{item.idDisenyo}}</h3>
+                  <p>{{item.descrip}}</p>
+                </div>
+              </div>
+            }
+        </div>
+    </div>
+
+    <!-- Formulario de registro -->
+    <div class="register-form">
+      <div class="logo-container">
+        <img src="http://localhost:3000/assets/FORILogoRedi.png" alt="MDN" />
+      </div>
+      <h1>Añadir Proyecto</h1>
+
+      <input type="date" [(ngModel)]="this.newDisenyo.fechaCreacion"/>
+      <input
+        type="descrip"
+        [(ngModel)]="this.newDisenyo.descrip"
+        name="descrip"
+        id="descrip"
+        placeholder="Descrip"
+      />
+      <label for="foto">Foto:</label>
+      <input type="file" (change)="onFileSelected($event)" id="foto" />
+      <form>
+        <button type="submit" (click)="enviarDisenyo()">Añadir</button>
+      </form>
+    </div>
+  </div>
+</body>

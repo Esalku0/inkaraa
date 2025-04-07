@@ -48,6 +48,5 @@ export class HomeComponent {
   }
 
   comprobarRolUsuario() {
-    // Aquí va tu lógica personalizada.
   }
 }

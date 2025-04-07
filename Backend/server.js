@@ -173,7 +173,7 @@ app.get("/disenyos/estilos/:idEstilo", (req, res) => {
 
 app.get("/disenyos/artistas/:idArtista", (req, res) => {
   console.log("ENTREM EN ARTISTAS IDARTISTA");
-  const {idArtista} = req.params;
+  const { idArtista } = req.params;
   const query = "SELECT * from disenyos where idArtista = ?";
   db.query(query, [idArtista], (err, results) => {
     if (err) {
@@ -188,6 +188,17 @@ app.get("/disenyos/artistas/:idArtista", (req, res) => {
         res.json(results);
         console.log("todo bien");
       }
+    }
+  });
+});
+
+app.post("/DisenyoEstilo", (req, res) => {
+  const query = "INSER INTO disenyo_estilos (idDisenyo,idEstilo) = (?,?)";
+  const { idDisenyo, idEstilo } = req.params;
+  db.query(query, [idDisenyo, idEstilo], (err, results) => {
+    if (err) {
+      console.error("Error al ejecutar la consulta:", err);
+      return res.status(500).send("Error en el servidor");
     }
   });
 });
@@ -278,24 +289,32 @@ app.post("/disenyos", upload.single("image"), async (req, res) => {
   console.log("morcilla", req.body.disenyo);
   console.log("Contenido de req.body:", req.body.filename);
 
+  console.log("Contenido de req.body estilos:", req.body.estilos);
+
   console.log("Archivo recibido en req.file:", req.file);
 
   //COMPROBAMOS SI FALTAN DATOS DEL BODY
   if (!req.file || !req.body.disenyo) {
     return res.status(400).send("Faltan datos en la solicitud");
   }
-
   try {
-    //Pillamos el artista
     const disenyo = JSON.parse(req.body.disenyo);
-    //sacamos los datos del artista!!
+    const estilos = JSON.parse(req.body.estilos);
+
     const { imgDisenyo, descrip, idArtista, fechaCreacion } = disenyo;
+    const {estilo1, estilo2} = estilos;
 
     const foto = `/assets/disenyos/${req.file.filename}`;
 
-    console.log("Datos del disenyo:", disenyo);
+    //FALTA ESTO
+    if (estilos.length=1) {
+      const query2 = `INSERT INTO disenyos_estilos (idDisenyo, idEstilo) VALUES (?, ?)`;
+    }else{}
+
 
     const query1 = `INSERT INTO disenyos (imgDisenyo, descrip, idArtista, fechaCreacion) VALUES (?, ?, ?, ?)`;
+    const query2 = `INSERT INTO disenyos_estilos (idDisenyo, idEstilo) VALUES (?, ?)`;
+
     db.query(
       query1,
       [foto, descrip, idArtista, fechaCreacion],
@@ -305,7 +324,11 @@ app.post("/disenyos", upload.single("image"), async (req, res) => {
           return res.status(500).send("Error al crear disenyo");
         }
 
-        const lastId = result.insertId; // ID del usuario recién insertado
+        const lastId = result.insertId; 
+//INSERT INTO `artistas` (`idArtista`, `idUsuario`, `nombre`, `apellido`, `alias`, `ciudad`, `foto`) VALUES
+//(32, 13, 'Jose Ignacio', 'De la cruz', 'El macarra', '2342', '/assets/artistas/1742895285597.jpg'),
+        db.query(query2,[])
+
         console.log("disenyo creado con ID:", lastId);
       }
     );

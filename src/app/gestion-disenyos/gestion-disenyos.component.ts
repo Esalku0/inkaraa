@@ -10,6 +10,9 @@ import { EstilosService } from '../service/estilos.service';
 import { Disenyo, DisenyosMap } from '../POJOs/disenyos';
 import { DisenyosService } from '../service/disenyos.service';
 import { Artista } from '../POJOs/artistas';
+import { DisenyoEstilos } from '../POJOs/disenyo-estilos';
+import { DisenyosEstilosService } from '../service/disenyos-estilos.service';
+
 @Component({
   selector: 'app-gestion-disenyos',
   imports: [CommonModule,
@@ -22,11 +25,6 @@ import { Artista } from '../POJOs/artistas';
   styleUrl: './gestion-disenyos.component.css'
 })
 export class GestionDisenyosComponent {
-  selectedFile: File | "" = "";
-
-  datePipe: DatePipe = inject(DatePipe);
-  arrEstilos: Estilos[] = [];
-  arrDisenyos: Disenyo[] = [];
 
   newDisenyo: Disenyo = {
     idDisenyo: 0,
@@ -36,12 +34,27 @@ export class GestionDisenyosComponent {
     fechaCreacion: undefined
   };
 
+  newEstiloDisenyo: DisenyoEstilos = {
+    idDisenyo: 0,
+    idEstilo: 0
+  }
+  newEstiloDisenyo2: DisenyoEstilos = {
+    idDisenyo: 0,
+    idEstilo: 0
+  }
 
+  arrEstilos: Estilos[] = [];
+  arrDisenyos: Disenyo[] = [];
+  arrDisenyosEstilos:number[]=[];
+  
+  selectedFile: File | "" = "";
+  datePipe: DatePipe = inject(DatePipe);
   tokenNull = false;
   rol: string = '';
 
   disenyoService: DisenyosService = inject(DisenyosService);
-
+  estilosDisenyoService: DisenyosEstilosService = inject(DisenyosEstilosService);
+  estilosService:EstilosService=inject(EstilosService);
   constructor() {
     console.log("asdad");
     const idtemp = parseInt(localStorage.getItem("id") ?? "0");
@@ -53,6 +66,7 @@ export class GestionDisenyosComponent {
     } else {
       this.tokenNull == true;
     }
+    this.cargarEstilos();
   }
 
   cargarDisenyosById(id: number) {
@@ -65,7 +79,13 @@ export class GestionDisenyosComponent {
       }
     });
   }
-
+  cargarEstilos() {
+    console.log("console");
+    this.estilosService.getAllEstilos().subscribe((data: any) => {
+      console.log("console");
+        this.arrEstilos=new EstilosMap().get(data);
+    });
+  }
 
   cambiarFiltro(Id: number) {
 
@@ -80,17 +100,23 @@ export class GestionDisenyosComponent {
       console.error("No se seleccionó ninguna imagen.");
       return;
     }
+    console.log(this.arrDisenyosEstilos, this.arrDisenyosEstilos[1]);
+
     //preparamos el formData
     const formData = new FormData();
     //al formdata le metemos el objeto artista
     formData.append('disenyo', JSON.stringify(this.newDisenyo));
     //al formData le metemos la imagen
     formData.append('image', this.selectedFile);
+    formData.append('estilos', JSON.stringify(this.arrDisenyosEstilos));
 
     //nada, aqui todo normal, llamamos a nuestro querido observable donde le pasamos el formdata en vez de un obejto
     this.disenyoService.postDisenyo(formData).subscribe({
       next: (response: any) => {
         console.log("disenyo añadido con éxito:", response);
+        this.anyadirAEstilosDisenyos();
+        console.log("MONDONGO");
+
         this.vaciarDisenyo();
         const idtemp = parseInt(localStorage.getItem("id") ?? "0");
         this.cargarDisenyosById(idtemp);
@@ -101,7 +127,18 @@ export class GestionDisenyosComponent {
     });
   }
 
+  anyadirAEstilosDisenyos(){
+    console.log("entramos aqui");
+    this.estilosDisenyoService.addDisenyosEstilos(this.newEstiloDisenyo).subscribe((data:any)=>{
+      console.log("entramos aqui2");
 
+      if (this.newEstiloDisenyo2.idEstilo!=0) {
+        console.log("entramos aqui3");
+
+        this.estilosDisenyoService.addDisenyosEstilos(this.newEstiloDisenyo2).subscribe();
+      }
+    });
+  }
 
   onFileSelected(event: any): void {
     console.log("Evento detectado", event);

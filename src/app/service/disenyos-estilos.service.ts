@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { s } from '@angular/core/weak_ref.d-ttyj86RV';
+import { DisenyoEstilos } from '../POJOs/disenyo-estilos';
 
 @Injectable({
   providedIn: 'root'
@@ -14,9 +16,10 @@ export class DisenyosEstilosService {
     return this.httpClient.get(this.API);
   }
 
-  getAllArtistasById(id: number) {
-    console.log('este es el id a buscar ' + id);
-    return this.httpClient.get(this.API + '/' + id);
+
+  addDisenyosEstilos(newestilodis: DisenyoEstilos){
+    console.log(this.API,newestilodis);
+    return this.httpClient.post(this.API,newestilodis);
   }
 }
 

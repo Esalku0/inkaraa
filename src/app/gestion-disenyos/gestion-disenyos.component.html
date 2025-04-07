@@ -4,7 +4,7 @@
     rel="stylesheet"
   />
   <div class="container">
-    <div class="logo">
+    <div class="logo" routerLink="/">
       <h1>Inkara</h1>
     </div>
     <nav>
@@ -79,26 +79,24 @@
   <div class="register-container">
     <!-- Tabla de usuarios -->
     <div class="users-table">
-        <div class="gallery">
-
-            @for(item of this.arrDisenyos; track item.idDisenyo){
-              <div class="gallery-item style1">
-                <img src={{item.imgDisenyo}} alt="Diseño 1" />
-                <div class="info">
-                    <button>Borrar</button>
-                </div>
-              </div>
-            }
+      <div class="gallery">
+        @for(item of this.arrDisenyos; track item.idDisenyo){
+        <div class="gallery-item style1">
+          <img src="{{ item.imgDisenyo }}" alt="Diseño 1" />
+          <div class="info">
+            <button type="submit">Borrar</button>
+          </div>
         </div>
+        }
+      </div>
     </div>
 
     <!-- Formulario de registro -->
     <div class="register-form">
-      <div class="logo-container">
-      </div>
+      <div class="logo-container"></div>
       <h1>Añadir a mis Diseños</h1>
 
-      <input type="date" [(ngModel)]="this.newDisenyo.fechaCreacion"/>
+      <label for="foto">Foto:</label>
       <input
         type="descrip"
         [(ngModel)]="this.newDisenyo.descrip"
@@ -107,7 +105,33 @@
         placeholder="Descrip"
       />
       <label for="foto">Foto:</label>
+
+      <input type="date" [(ngModel)]="this.newDisenyo.fechaCreacion" />
+
+      <label for="foto">Foto:</label>
       <input type="file" (change)="onFileSelected($event)" id="foto" />
+      <label for="foto">Estilos:</label>
+
+      <select
+        class="boo"
+        name="estilo1"
+        [(ngModel)]="this.arrDisenyosEstilos[0]"
+        required="Es necesario"
+      >
+        @for (item of arrEstilos; track item) {
+        <option [value]="item.idEstilo">{{ item.nombreEstilo }}</option>
+        }
+      </select>
+      <select
+        class="boo"
+        name="estilo2"
+        [(ngModel)]="this.arrDisenyosEstilos[1]"
+      >
+        @for (item of arrEstilos; track item) {
+        <option [value]="item.idEstilo">{{ item.nombreEstilo }}</option>
+        }
+      </select>
+      <br />
       <form>
         <button type="submit" (click)="enviarDisenyo()">Añadir</button>
       </form>

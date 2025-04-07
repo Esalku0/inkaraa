@@ -173,6 +173,23 @@ app.get("/estilos", (req, res) => {
   });
 });
 
+app.get("/usuarios",async (req,res)=>{
+  db.query("SELECT * FROM usuarios where rol NOT LIKE 2",(err, results) =>{
+    if (err) {
+      console.error("Error al ejecutar la consulta:", err);
+      return res.status(500).send("Error en el servidor");
+    }else{
+      res.json(results);
+    }
+  });
+});
+app.delete("/usuarios/:id",async (req,res)=>{
+  db.query("DELETE FROM usuarios where id= ? ",[req.params.id],err=>{
+    if (err) return res.status(500).send(err); // Manejo de errores al eliminar.
+    res.sendStatus(200); 
+  });
+});
+
 app.post("/usuarios", async (req, res) => {
   const { nombre, apellidos, email, contrasena } = req.body;
 
@@ -296,6 +313,11 @@ app.post("/artistas", upload.single("image"), async (req, res) => {
 //se puede hacer tambien para comprobar roles y eso
 function verificarToken(req, res, next) {}
 app.use(verificarToken);
+app.get("/", (req, res) => {
+  res.send("¡Servidor corriendo! Bienvenido a la API.");
+  next(); 
+});
+
 
 const PORT = 3000;
 app.listen(PORT, () => {

@@ -10,9 +10,10 @@ export class UsuariosService {
   constructor(private httpClient: HttpClient) {}
 
   getAllUsuarios() {
-    console.log(this.httpClient.get(this.API));
+    console.log(this.API);
     return this.httpClient.get(this.API);
   }
+
   addUsuario(newUser: Usuario){
     console.log(newUser.contrasena);
     return this.httpClient.post(this.API,newUser);
@@ -20,11 +21,12 @@ export class UsuariosService {
 
   putUsuario(newUser: Usuario) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.httpClient.put(this.API + '/' + newUser.idCliente, newUser, { headers: headers });
+    return this.httpClient.put(this.API + '/' + newUser.id, newUser, { headers: headers });
   }
 
   delete(id: number) {
-    return this.httpClient.delete(this.API + '/' + id);
+    console.log(this.API + '/' + id);
+    return this.httpClient.delete(this.API + '/' + id,{responseType: 'text'} );
   }
 
 }

@@ -7,6 +7,8 @@ import { Artista, ArtistasMap } from '../POJOs/artistas';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { LoginService } from '../service/login.service';
+import { UsuariosService } from '../service/usuarios.service';
+import { Usuario, UsuariosMap } from '../POJOs/usuarios';
 
 @Component({
   selector: 'app-pantalla-gestion-artista',
@@ -22,9 +24,19 @@ export class PantallaGestionComponentArtista {
   artiService: ArtistasService = inject(ArtistasService);
   newArtista: Artista = { idArtista: 0, nombre: '', apellido: '', alias: '', ciudad: '', foto: '' };
   arratistas: Artista[] = [];
+  usuService: UsuariosService = inject(UsuariosService);
+  newUsu: Usuario = {
+    id: 0,
+    nombre: '',
+    apellidos: '',
+    email: '',
+    contrasena: ''
+  };
+  arrUsu:Usuario[]=[];
+
   selectedFile: File | "" = "";
-  tempPass:string="";
-  email: string ="";
+  tempPass: string = "";
+  email: string = "";
 
   //Datos para el token de sesión
   rol: string = '';
@@ -34,6 +46,7 @@ export class PantallaGestionComponentArtista {
   constructor(private http: HttpClient) {
     this.rol = this.logService.getRol();
     console.log(this.rol);
+    this.cargarTodosUsuario();
   }
 
   cerrarSesion() {
@@ -77,6 +90,7 @@ export class PantallaGestionComponentArtista {
     this.artiService.addArtista(formData).subscribe({
       next: (response: any) => {
         console.log("Artista añadido con éxito:", response);
+        this.vaciarUsuario();
       },
       error: (err: any) => {
         console.error("Error al añadir artista:", err);
@@ -84,5 +98,26 @@ export class PantallaGestionComponentArtista {
     });
   }
 
+  cargarTodosUsuario(){
+    console.log("entramos");
+    this.usuService.getAllUsuarios().subscribe((data:any)=>{
+      this.arrUsu= new UsuariosMap().get(data);
+    });
+  }
+  borrarUsuario(id:number){
+    this.usuService.delete(id).subscribe((data:any)=>{
+      this.cargarTodosUsuario();
+    })
+  }
+
+  vaciarUsuario(){
+    this.newUsu = {
+      id: 0,
+      nombre: '',
+      apellidos: '',
+      email: '',
+      contrasena: ''
+    };
+  }
 
 }

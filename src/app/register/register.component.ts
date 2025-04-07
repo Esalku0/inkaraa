@@ -17,7 +17,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class RegisterComponent {
   newUser: Usuario = {
-    idCliente: 0,
+    id: 0,
     nombre: '',
     apellidos: '',
     email: '',

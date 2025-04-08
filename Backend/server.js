@@ -285,13 +285,6 @@ const upload = multer({ storage });
 //-----------------------------------------------------------------------------------------------------------------------------
 
 app.post("/disenyos", upload.single("image"), async (req, res) => {
-  console.log("Contenido de req.body:", req.body);
-  console.log("morcilla", req.body.disenyo);
-  console.log("Contenido de req.body:", req.body.filename);
-
-  console.log("Contenido de req.body estilos:", req.body.estilos);
-
-  console.log("Archivo recibido en req.file:", req.file);
 
   //COMPROBAMOS SI FALTAN DATOS DEL BODY
   if (!req.file || !req.body.disenyo) {
@@ -306,14 +299,10 @@ app.post("/disenyos", upload.single("image"), async (req, res) => {
 
     const foto = `/assets/disenyos/${req.file.filename}`;
 
-    //FALTA ESTO
-    if (estilos.length=1) {
-      const query2 = `INSERT INTO disenyos_estilos (idDisenyo, idEstilo) VALUES (?, ?)`;
-    }else{}
 
 
     const query1 = `INSERT INTO disenyos (imgDisenyo, descrip, idArtista, fechaCreacion) VALUES (?, ?, ?, ?)`;
-    const query2 = `INSERT INTO disenyos_estilos (idDisenyo, idEstilo) VALUES (?, ?)`;
+    const query2 = `INSERT INTO disenyo_estilos (idDisenyo, idEstilo) VALUES (?, ?)`;
 
     db.query(
       query1,
@@ -325,9 +314,23 @@ app.post("/disenyos", upload.single("image"), async (req, res) => {
         }
 
         const lastId = result.insertId; 
-//INSERT INTO `artistas` (`idArtista`, `idUsuario`, `nombre`, `apellido`, `alias`, `ciudad`, `foto`) VALUES
-//(32, 13, 'Jose Ignacio', 'De la cruz', 'El macarra', '2342', '/assets/artistas/1742895285597.jpg'),
-        db.query(query2,[])
+        if (estilos.length === 1) {
+          db.query(query2, [lastId, estilos[0]], (err, result) => {
+            if (err) {
+              console.error("Error al insertar estilo:", err);
+              return res.status(500).send("Error en la base de datos");
+            }
+          });
+        } else if (estilos.length === 2) {
+          db.query(query2, [lastId, estilos[0], lastId, estilos[1]], (err, result) => {
+            if (err) {
+              console.error("Error al insertar estilos:", err);
+              return res.status(500).send("Error en la base de datos");
+            }
+          });
+        } else {
+          return res.status(400).send("Debes seleccionar uno o dos estilos.");
+        }
 
         console.log("disenyo creado con ID:", lastId);
       }

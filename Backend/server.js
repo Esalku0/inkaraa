@@ -284,6 +284,7 @@ const upload = multer({ storage });
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
 
+//ealiaga OJITO, TIENE QUE AÑADIR 2 SI AÑADIMOS 2, REVISALO JEFE!!!
 app.post("/disenyos", upload.single("image"), async (req, res) => {
 
   //COMPROBAMOS SI FALTAN DATOS DEL BODY
@@ -293,13 +294,10 @@ app.post("/disenyos", upload.single("image"), async (req, res) => {
   try {
     const disenyo = JSON.parse(req.body.disenyo);
     const estilos = JSON.parse(req.body.estilos);
-
     const { imgDisenyo, descrip, idArtista, fechaCreacion } = disenyo;
     const {estilo1, estilo2} = estilos;
 
     const foto = `/assets/disenyos/${req.file.filename}`;
-
-
 
     const query1 = `INSERT INTO disenyos (imgDisenyo, descrip, idArtista, fechaCreacion) VALUES (?, ?, ?, ?)`;
     const query2 = `INSERT INTO disenyo_estilos (idDisenyo, idEstilo) VALUES (?, ?)`;
@@ -314,18 +312,27 @@ app.post("/disenyos", upload.single("image"), async (req, res) => {
         }
 
         const lastId = result.insertId; 
-        if (estilos.length === 1) {
+        console.log("AAAA" + estilos.length);
+
+        if (estilos.length == 1) {
           db.query(query2, [lastId, estilos[0]], (err, result) => {
             if (err) {
               console.error("Error al insertar estilo:", err);
               return res.status(500).send("Error en la base de datos");
             }
           });
-        } else if (estilos.length === 2) {
-          db.query(query2, [lastId, estilos[0], lastId, estilos[1]], (err, result) => {
+        } else if (estilos.length == 2) {
+          console.log("entramos en el 1 xe");
+
+          db.query(query2, [lastId, estilos[0]], (err, result) => {
             if (err) {
               console.error("Error al insertar estilos:", err);
               return res.status(500).send("Error en la base de datos");
+            }else{
+              db.query(query2, [lastId, estilos[1]], (err, result) => {
+                console.log("entramos en el 2 xe");
+
+              });
             }
           });
         } else {

@@ -1,17 +1,23 @@
-/* Reset de estilos */
+/* General Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
 }
 
-body {
+
+html, body {
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
   background-color: #1a1a1a;
   color: #fff;
   font-size: 16px;
+  overflow-x: hidden;
 }
 
-/* Header Styles */
+
 header {
   position: fixed;
   top: 0;
@@ -32,7 +38,6 @@ header .container {
 a{
   text-decoration: none;
 }
-
 header .logo h1 {
   font-size: 50px;
   font-weight: bold;
@@ -59,7 +64,6 @@ header .logo h1:hover {
   }
 }
 
-/* Navigation Menu */
 nav ul {
   list-style-type: none;
   display: flex;
@@ -119,11 +123,12 @@ header .nav-links .dropdown {
 
 /* Dropdown Toggle Button */
 header .nav-links .dropdown-toggle {
-  font-size: 24px;
+  margin-left: 20px;
+  font-size: 20px;
+  width: 50px;
   color: #fff;
   cursor: pointer;
   padding: 10px 15px;
-  background: linear-gradient(45deg, #f39c12, #e67e22);
   border-radius: 20px;
   transition: all 0.3s ease;
   display: flex;
@@ -189,6 +194,8 @@ header .nav-links .dropdown-menu li a i {
   font-size: 20px;
   color: #f39c12;
 }
+
+
 
 
 /* Sección de diseños */

@@ -8,6 +8,8 @@ import { DisenyosEstilosService } from "../service/disenyos-estilos.service";
 import { EstilosService } from "../service/estilos.service";
 import { MatIconModule } from "@angular/material/icon";
 import { Estilos, EstilosMap } from "../POJOs/estilos";
+import { ArtistasService } from "../service/artistas.service";
+import { LoginService } from "../service/login.service";
 @Component({
   selector: "app-ver-disenyos",
   imports: [
@@ -23,31 +25,46 @@ import { Estilos, EstilosMap } from "../POJOs/estilos";
 })
 export class VerDisenyosComponent {
 
-  idClickFiltrado:number=0;
+  idClickFiltrado: number = 0;
   arrDisenyos: Disenyo[] = [];
   arrEstilos: Estilos[] = [];
 
   disenyoService: DisenyosService = inject(DisenyosService);
-  disenyosEstilosService: DisenyosEstilosService = inject(
-    DisenyosEstilosService
-  );
+  disenyosEstilosService: DisenyosEstilosService = inject(DisenyosEstilosService);
   estilosService: EstilosService = inject(EstilosService);
-  
+  logService: LoginService = inject(LoginService);
+
+  rol: string = '';
+  tokenNull = false;
+
   constructor() {
     console.log("asdad");
     this.cargarDisenyos();
     this.cargarEstilos();
+    this.rol = this.logService.getRol();
+    if (localStorage.getItem("token") == null || localStorage.getItem("token") == "") {
+      this.tokenNull = false;
+    } else {
+      this.tokenNull = true;
+    }
+
   }
 
   cargarDisenyos() {
     this.disenyoService.getAllDisenyos().subscribe((data: any) => {
       this.arrDisenyos = new DisenyosMap().get(data);
+
+      for (let item of this.arrDisenyos) {
+        item.imgDisenyo = `http://localhost:3000${item.imgDisenyo}`;
+        console.log(item.imgDisenyo);
+      }
     });
   }
 
-  cargarEstilos(){
-    this.estilosService.getAllEstilos().subscribe((data:any)=>{
-      this.arrEstilos= new EstilosMap().get(data);
+  cargarEstilos() {
+    this.estilosService.getAllEstilos().subscribe((data: any) => {
+      this.arrEstilos = new EstilosMap().get(data);
+
     });
   }/*
   cargarDisenyosById(idEstilo:number){
@@ -58,11 +75,11 @@ export class VerDisenyosComponent {
   }
     */
   cargarDisenyosById(idEstilo: number) {
-    console.log("ID ESTILO ENVIADO:", idEstilo); 
-    this.disenyoService.getAllArtistasByEstilo(idEstilo).subscribe((data: any) => {
-        console.log("Datos recibidos:", data);
-        this.arrDisenyos = new DisenyosMap().get(data);
-      },
+    console.log("ID ESTILO ENVIADO:", idEstilo);
+    this.disenyoService.getAllDisenyosByEstilo(idEstilo).subscribe((data: any) => {
+      console.log("Datos recibidos:", data);
+      this.arrDisenyos = new DisenyosMap().get(data);
+    },
       (error) => {
         if (error.status === 404) {
           console.warn("No hay diseños para este estilo, mostrando array vacío.");
@@ -73,11 +90,18 @@ export class VerDisenyosComponent {
       }
     );
   }
-  
 
-  cambiarFiltro(idEstilo: number){
-    this.idClickFiltrado=idEstilo;
+
+  cambiarFiltro(idEstilo: number) {
+    this.idClickFiltrado = idEstilo;
     console.log(idEstilo);
     this.cargarDisenyosById(idEstilo);
+  }
+
+  cerrarSesion() {
+    this.logService.cerrarSesion();
+    location.reload();
+    localStorage.removeItem('token');
+    localStorage.removeItem('rol');
   }
 }

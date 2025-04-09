@@ -28,11 +28,17 @@ export class VerArtistasComponent {
   logService: LoginService = inject(LoginService);
   artiService: ArtistasService = inject(ArtistasService);
 
-  tokenNull=false;
+  tokenNull = false;
   constructor() {
     this.getArtistas();
     this.rol = this.logService.getRol();
     console.log(this.rol);
+
+    if (localStorage.getItem("token") == null || localStorage.getItem("token") == "") {
+      this.tokenNull = false;
+    } else {
+      this.tokenNull = true;
+    }
   }
 
   cerrarSesion() {

@@ -271,8 +271,10 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname)); // Generar un nombre único para evitar conflictos
   },
 });
+console.log("1", storage);
 
 const upload = multer({ storage });
+console.log("1", upload);
 
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
@@ -286,6 +288,7 @@ const upload = multer({ storage });
 
 //ealiaga OJITO, TIENE QUE AÑADIR 2 SI AÑADIMOS 2, REVISALO JEFE!!!
 app.post("/disenyos", upload.single("image"), async (req, res) => {
+  console.log("1", upload.single("image"));
 
   //COMPROBAMOS SI FALTAN DATOS DEL BODY
   if (!req.file || !req.body.disenyo) {
@@ -347,6 +350,7 @@ app.post("/disenyos", upload.single("image"), async (req, res) => {
     res.status(400).send("Error al procesar la información enviada");
   }
 });
+console.log("-------------------------------------------------------------------------------------------------------------");
 
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
@@ -367,12 +371,16 @@ const storage2 = multer.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname)); // Generar un nombre único para evitar conflictos
   },
 });
+console.log("2", storage2);
 
-const upload2 = multer({ storage });
+const upload2 = multer({ storage: storage2 });
+console.log("2",upload2);
+
 
 //Chequeamos que estamos haciendo un post de artistas, es decir, que estamos subiendo un artista, pero vamos a ejecutar
 //varias cositas, primero vamos a subir la imagen, luego vamos a subir los datos del artista
 app.post("/artistas", upload2.single("image"), async (req, res) => {
+  console.log("2",upload2.single("image"));
   console.log("Contenido de req.body:", req.body);
   console.log("Archivo recibido en req.file:", req.file);
 

@@ -110,12 +110,13 @@ app.get("/artistas", (req, res) => {
 
 app.get("/artistas/:id", (req, res) => {
   const { id } = req.params;
-  const query = "SELECT * FROM artistas WHERE id = ?";
+  const query = "SELECT * FROM artistas WHERE idArtista = ?";
   db.query(query, [id], (err, results) => {
     if (err) {
       console.error(err);
       res.status(500).send("Error en la base de datos");
     } else {
+      console.log("Datos obtenidos de la base de datos:", results);
       res.json(results);
     }
   });

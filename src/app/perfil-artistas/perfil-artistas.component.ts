@@ -2,13 +2,16 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
 import { CarrouselImagenesComponent } from '../carrousel-imagenes/carrousel-imagenes.component';
 import { LoginService } from '../service/login.service';
-
+import { Artista, ArtistaSinMap, ArtistasMap, ArtistasMap2 } from '../POJOs/artistas';
+import { ArtistasService } from '../service/artistas.service';
+import { DisenyosService } from '../service/disenyos.service';
+import { Disenyo } from '../POJOs/disenyos';
 @Component({
   selector: 'app-perfil-artistas',
-  imports: [    CommonModule,
+  imports: [CommonModule,
     FormsModule,
     MatIconModule,
     RouterLink,
@@ -18,19 +21,60 @@ import { LoginService } from '../service/login.service';
   styleUrl: './perfil-artistas.component.css'
 })
 export class PerfilArtistasComponent {
-rol='1';
-tokenNull=false;
-
-constructor(){
-
-}
 
 
+  artista: Artista = {
+    idArtista: 0,
+    nombre: '',
+    apellido: '',
+    alias: '',
+    ciudad: '',
+    foto: ''
+  }
+  
+  disenyos: Disenyo[] = [];
+  logService: LoginService = inject(LoginService);
+  artiService: ArtistasService = inject(ArtistasService);
+  disenyoService: DisenyosService = inject(DisenyosService);
+  route: ActivatedRoute = inject(ActivatedRoute);
+  rol = '';
+  tokenNull = false;
+
+  constructor() {
+    const idParam: number = Number(this.route.snapshot.paramMap.get('id')) || 0;   
+
+    this.rol = this.logService.getRol();
+    if (localStorage.getItem("token") == null || localStorage.getItem("token") == "") {
+      this.tokenNull = false;
+    } else {
+      this.tokenNull = true;
+    }
+
+    this.cargarArtista(idParam);
+    console.log(this.artista.nombre);
+    console.log(this.artista.alias);
+
+  }
+
+  cargarArtista(id: number) {
+    console.log("buscamos ete id " +  id );
+    this.artiService.getAllArtistasById(id).subscribe((data: any) => {
+      this.artista = new ArtistasMap2().get(data)[0];
+      this.artista.foto = `http://localhost:3000${this.artista.foto}`;
+
+    });
+  }
+
+  cargarDisenyos(idartista: number) {
+    this.disenyoService.getAllArtistasByIdArtista(idartista).subscribe((data: any) => {
+
+    });
+  }
 
 
-cerrarSesion(){
-  console.log("a");
-}
+  cerrarSesion() {
+    console.log("a");
+  }
 
 
 }

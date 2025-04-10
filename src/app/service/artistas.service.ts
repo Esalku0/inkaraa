@@ -15,6 +15,7 @@ export class ArtistasService {
 
   getAllArtistasById(id: number) {
     console.log('este es el id a buscar ' + id);
+    console.log(this.API + '/' + id);
     return this.httpClient.get(this.API + '/' + id);
   }
 

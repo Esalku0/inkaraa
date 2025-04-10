@@ -1,448 +1,251 @@
-/* General Reset */
+/* Reset General */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  html, body {
-    height: 100%;
-    font-family: 'Roboto', sans-serif;
-    line-height: 1.6;
-    background-color: #1a1a1a;
-    color: #fff;
-    font-size: 16px;
-    overflow-x: hidden;
-  }
-  
-  header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 10;
-    background: rgba(0, 0, 0, 0.6);
-    padding: 20px 0;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-  
-  header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-  }
-  a{
-    text-decoration: none;
-  }
-  header .logo h1 {
-    font-size: 50px;
-    font-weight: bold;
-    color: #f39c12;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    text-shadow: 5px 5px 15px rgba(0, 0, 0, 0.8);
-    animation: textGlow 2s ease-in-out infinite alternate;
-    cursor: pointer;
-  }
-  
-  header .logo h1:hover {
-    color: #e67e22;
-  }
-  
-  @keyframes textGlow {
-    0% {
-      text-shadow: 5px 5px 15px rgba(0, 0, 0, 0.8), 0 0 25px #f39c12,
-        0 0 5px #f39c12;
-    }
-    100% {
-      text-shadow: 5px 5px 25px rgba(0, 0, 0, 0.5), 0 0 35px #f39c12,
-        0 0 15px #f39c12;
-    }
-  }
-  
-  nav ul {
-    list-style-type: none;
-    display: flex;
-    align-items: center;
-  }
-  
-  nav ul li {
-    margin-left: 30px;
-    position: relative;
-  }
-  
-  nav ul li a {
-    text-decoration: none;
-    color: #fff;
-    font-size: 18px;
-    font-weight: 600;
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    transition: color 0.3s ease;
-  }
-  
-  nav ul li a::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 3px;
-    background-color: #f39c12;
-    left: 0;
-    bottom: -5px;
-    transition: width 0.3s ease;
-  }
-  
-  nav ul li a:hover {
-    color: #f39c12;
-  }
-  
-  nav ul li a:hover::after {
-    width: 100%;
-  }
-  
-  nav ul li a span {
-    display: none;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  background-color: #1a1a1a;
+  color: #fff;
+  font-size: 16px;
+  overflow-x: hidden;
+}
+
+/* HEADER */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 15px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+header .logo h1 {
+  font-size: 48px;
+  font-weight: bold;
+  color: #f39c12;
+  text-transform: uppercase;
+  text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.8);
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+header .logo h1:hover {
+  color: #e67e22;
+  text-shadow: 6px 6px 15px rgba(0, 0, 0, 0.9);
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+nav ul li {
+  margin-left: 30px;
+  position: relative;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+  color: #f39c12;
+}
+
+/* DROPDOWN MENU */
+header .nav-links .dropdown {
+  position: relative;
+}
+
+header .nav-links .dropdown-toggle {
+  font-size: 20px;
+  color: #fff;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+header .nav-links .dropdown-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+  min-width: 200px;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+header .nav-links .dropdown:hover .dropdown-menu {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+header .nav-links .dropdown-menu li a {
+  font-size: 16px;
+  color: #fff;
+  padding: 8px 15px;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+
+header .nav-links .dropdown-menu li a:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+}
+
+/* SECCIÓN PERFIL ARTISTA */
+.perfil-artista {
+  padding: 120px 20px 60px;
+  text-align: center;
+}
+
+.perfil-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.perfil-imagen img {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+}
+
+.perfil-info h2 {
+  font-size: 30px;
+  color: #f39c12;
+  margin-bottom: 10px;
+}
+
+.alias {
+  font-size: 18px;
+  font-style: italic;
+  color: #bbb;
+}
+
+.ciudad {
+  font-size: 18px;
+  color: #ddd;
+}
+
+/* SECCIÓN PORTAFOLIO */
+.titulo-portafolio {
+  font-size: 26px;
+  color: #f39c12;
+  margin: 40px 0 20px;
+}
+
+.portafolio {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+.disenyo-card {
+  background-color: #222;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  max-width: 320px;
+  transition: transform 0.3s ease;
+}
+
+.disenyo-card:hover {
+  transform: scale(1.05);
+}
+
+.disenyo-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.disenyo-card p {
+  color: #ddd;
+  font-size: 16px;
+  padding: 10px 0;
+  text-align: center;
+}
+
+/* FOOTER */
+footer {
+  background-color: #111;
+  padding: 30px 0;
+  text-align: center;
+  width: 100%;
+  box-shadow: 0 -3px 15px rgba(0, 0, 0, 0.4);
+}
+
+footer p {
+  font-size: 16px;
+  color: #bbb;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  body {
     font-size: 14px;
   }
-  
-  nav ul li a:hover span {
-    display: inline;
+
+  header .logo h1 {
+    font-size: 36px;
   }
-  
-  /* Dropdown Container */
-  header .nav-links .dropdown {
-    position: relative;
-    display: inline-block;
-  }
-  
-  /* Dropdown Toggle Button */
-  header .nav-links .dropdown-toggle {
-    margin-left: 20px;
-    font-size: 20px;
-    width: 50px;
-    color: #fff;
-    cursor: pointer;
-    padding: 10px 15px;
-    border-radius: 20px;
-    transition: all 0.3s ease;
-    display: flex;
+
+  header .container {
+    flex-direction: column;
     align-items: center;
-    gap: 5px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   }
-  
-  header .nav-links .dropdown-toggle:hover {
-    background: linear-gradient(45deg, #e67e22, #d35400);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-    color: #fff;
-  }
-  
-  /* Dropdown Menu */
-  header .nav-links .dropdown-menu {
-    display: none;
-    position: absolute;
-    right: 0;
-    background: rgba(0, 0, 0, 0.9); /* Fondo más oscuro para destacar */
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 15px;
-    padding: 10px 0;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-    min-width: 240px;
-    opacity: 0;
-    transform: translateY(-20px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    z-index: 10;
-  }
-  
-  /* Show Dropdown on Hover */
-  header .nav-links .dropdown:hover .dropdown-menu {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-  }
-  
-  /* Dropdown Menu Items */
-  header .nav-links .dropdown-menu li {
-    padding: 10px 20px;
-  }
-  
-  header .nav-links .dropdown-menu li a {
-    font-size: 16px;
-    color: #fff;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
+
+  nav ul {
+    flex-direction: column;
     gap: 10px;
-    transition: background-color 0.3s, transform 0.2s;
   }
-  
-  header .nav-links .dropdown-menu li a:hover {
-    background: rgba(255, 255, 255, 0.15);
-    transform: scale(1.05);
-    border-radius: 10px;
+
+  .perfil-imagen img {
+    width: 180px;
+    height: 180px;
   }
-  
-  /* Icon Styles Inside Dropdown */
-  header .nav-links .dropdown-menu li a i {
-    font-size: 20px;
-    color: #f39c12;
+
+  .portafolio {
+    grid-template-columns: 1fr;
   }
-  
-  
-  /* Hero Section */
-  .hero {
-    height: 100vh;
-    background-image: url('https://example.com/tattoo-hero.jpg');
-    background-size: cover;
-    background-position: center;
-    position: relative;
-    color: #fff;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-attachment: fixed;
-    transition: all 0.5s ease;
-  }
-  
-  .hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 1;
-  }
-  
-  .hero-content {
-    z-index: 2;
-    transform: translateY(50px);
-    animation: fadeInUp 1s ease-out;
-  }
-  
-  .hero h2 {
-    font-size: 60px;
-    font-family: 'Montserrat', sans-serif;
-    text-transform: uppercase;
-    font-weight: bold;
-    letter-spacing: 5px;
-    margin-bottom: 20px;
-    animation: fadeInUp 1s ease-out 0.5s;
-  }
-  
-  .hero p {
-    font-size: 24px;
-    margin-bottom: 40px;
-    animation: fadeInUp 1s ease-out 1s;
-  }
-  
-  .cta-button {
-    background-color: #f39c12;
-    color: #fff;
-    padding: 15px 30px;
-    font-size: 18px;
-    font-weight: 600;
-    text-decoration: none;
-    border-radius: 30px;
-    transition: all 0.3s ease;
-    letter-spacing: 2px;
-  }
-  
-  .cta-button:hover {
-    background-color: #e67e22;
-    transform: translateY(-5px);
-  }
-  
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(50px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  /* Footer Section */
-  footer {
-    background-color: #111;
-    padding: 40px 0;
-    text-align: center;
-  }
-  
-  footer .footer-content p {
-    font-size: 16px;
-    font-weight: 400;
-    color: #aaa;
-  }
-  
-  footer .social-links {
-    margin-top: 20px;
-  }
-  
-  footer .social-links a {
-    color: #fff;
-    font-size: 25px;
-    margin: 0 15px;
-    transition: color 0.3s ease;
-  }
-  
-  footer .social-links a:hover {
-    color: #f39c12;
-  }
-  
-  .floating-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background-color: #f39c12;
-    color: #fff;
-    padding: 15px 25px;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 50px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-decoration: none;
-    transition: transform 0.3s, background-color 0.3s;
-    z-index: 100;
-  }
-  
-  .artistas-section {
-    padding: 80px 0;
-    background-color: #1a1a1a;
-    text-align: center;
-  }
-  
-  .artistas-container h2 {
-    font-size: 50px;
-    margin-bottom: 50px;
-    font-weight: 700;
-    color: #f39c12;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
-  }
-  
-  .artistas-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 40px;
-    justify-items: center;
-  }
-  
-  .artista-card {
-    background-color: #1a1a1a;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 10px 60px rgba(0, 0, 0, 0.6);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-    width: 100%;
-    max-width: 320px;
-  }
-  
-  .artista-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 12px 60px rgba(0, 0, 0, 0.7);
-  }
-  
-  .artista-card img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-  }
-  
-  .artista-info {
-    padding: 20px;
-  }
-  
-  .artista-info h3 {
-    font-size: 22px;
-    color: #f39c12;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-  }
-  
-  .artista-info .alias {
-    font-size: 16px;
-    font-style: italic;
-    color: #bbb;
-    margin-bottom: 15px;
-  }
-  
-  .cta-button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: transparent;
-    border: 2px solid #f39c12;
-    color: #f39c12;
-    text-transform: uppercase;
-    font-weight: bold;
-    border-radius: 30px;
-    text-decoration: none;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  .cta-button:hover {
-    background-color: #f39c12;
-    color: #111;
-  }
-  
-  footer {
-    background-color: #111;
-    padding: 30px 0;
-    text-align: center;
-    width: 100%;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
-  }
-  
-  footer p {
-    font-size: 16px;
-    color: #bbb;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-weight: 500;
-  }
-  
-  @media (max-width: 768px) {
-    body {
-      font-size: 14px;
-    }
-  
-    header .logo h1 {
-      font-size: 40px;
-    }
-  
-    header nav {
-      display: none;
-    }
-  
-    header .menu-toggle {
-      display: block;
-    }
-  
-    .artistas-container h2 {
-      font-size: 32px;
-    }
-  
-    .artista-card img {
-      height: 240px;
-    }
-  
-    .artistas-grid {
-      grid-template-columns: 1fr;
-    }
-  
-    .cta-button {
-      font-size: 14px;
-      padding: 8px 16px;
-    }
-  }
-  
+}

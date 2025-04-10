@@ -69,12 +69,27 @@
   </div>
 </header>
 
-<section id="artistas" class="artistas-section">
-  <div class="artistas-container">
-    <br />
-    <br />
-    <br />
-    <img href="" alt="eluser" />
+<section class="perfil-artista">
+  <div class="perfil-container">
+    <div class="perfil-imagen">
+      {{artista.foto}}
+      <img src="{{ artista.foto }}" alt="{{ artista.nombre }} {{ artista.apellido }}" />
+    </div>
+    <div class="perfil-info">
+      <h2>{{ artista.nombre }} {{ artista.apellido }}</h2>
+      <p class="alias">{{ artista.alias }}</p>
+      <p class="ciudad">Ubicación: {{ artista.ciudad }}</p>
+    </div>
+  </div>
+
+  <h3 class="titulo-portafolio">Diseños del artista</h3>
+  <div class="portafolio">
+    @for (disenyo of disenyos; track disenyo.idDisenyo) {
+      <div class="disenyo-card">
+        <img src="{{ disenyo.imgDisenyo }}" alt="Diseño de {{ artista.nombre }}" />
+        <p>{{ disenyo.descrip }}</p>
+      </div>
+    }
   </div>
 </section>
 

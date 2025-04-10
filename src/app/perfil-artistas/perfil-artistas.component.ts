@@ -8,7 +8,7 @@ import { LoginService } from '../service/login.service';
 import { Artista, ArtistaSinMap, ArtistasMap, ArtistasMap2 } from '../POJOs/artistas';
 import { ArtistasService } from '../service/artistas.service';
 import { DisenyosService } from '../service/disenyos.service';
-import { Disenyo } from '../POJOs/disenyos';
+import { Disenyo, DisenyosMap } from '../POJOs/disenyos';
 @Component({
   selector: 'app-perfil-artistas',
   imports: [CommonModule,
@@ -61,12 +61,17 @@ export class PerfilArtistasComponent {
     this.artiService.getAllArtistasById(id).subscribe((data: any) => {
       this.artista = new ArtistasMap2().get(data)[0];
       this.artista.foto = `http://localhost:3000${this.artista.foto}`;
-
+      this.cargarDisenyos(id);
     });
   }
 
   cargarDisenyos(idartista: number) {
     this.disenyoService.getAllArtistasByIdArtista(idartista).subscribe((data: any) => {
+      this.disenyos=new DisenyosMap().get(data);
+      for (let index = 0; index < this.disenyos.length; index++) {
+        this.disenyos[index].imgDisenyo = `http://localhost:3000${this.disenyos[index].imgDisenyo}`;
+        
+      }
 
     });
   }

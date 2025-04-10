@@ -20,6 +20,10 @@ export class CarrouselImagenesComponent {
       src: 'https://dummyimage.com/800x800/666/fff.png&text=Imagen+3',
       alt: 'Imagen 3',
     },
+    {
+      src: 'https://dummyimage.com/800x800/666/fff.png&text=Imagen+4',
+      alt: 'Imagen 4',
+    },
   ];
 
   currentIndex: number = 0;

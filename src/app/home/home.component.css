@@ -4,9 +4,10 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
+  
 }
 
-html, body {
+body {
   height: 100%;
   font-family: 'Roboto', sans-serif;
   line-height: 1.6;
@@ -25,6 +26,8 @@ header {
   background: rgba(0, 0, 0, 0.6);
   padding: 20px 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin-bottom: 0; /* Aseguramos que no haya margen inferior en el header */
+
 }
 
 header .container {
@@ -197,7 +200,7 @@ header .nav-links .dropdown-menu li a i {
 /* Hero Section */
 .hero {
   height: 100vh;
-  background-image: url('https://example.com/tattoo-hero.jpg');
+  background-image: url('http://localhost:3000/assets/home/probeta.jpg');
   background-size: cover;
   background-position: center;
   position: relative;
@@ -272,9 +275,10 @@ header .nav-links .dropdown-menu li a i {
 
 /* Footer Section */
 footer {
-  background-color: #111;
+  background-color: #1a1a1a;
   padding: 40px 0;
   text-align: center;
+  border: #d35400 2px solid;
 }
 
 footer .footer-content p {
@@ -324,4 +328,6 @@ app-carousel {
   background-color: #1a1a1a; 
   border: 2px solid red; 
   height: 200px; 
+  margin-top: 0; /* Elimina cualquier margen superior */
+  padding-top: 0; /* Elimina cualquier padding superior */
 }

@@ -291,7 +291,6 @@ console.log("1", upload);
 app.post("/disenyos", upload.single("image"), async (req, res) => {
   console.log("1", upload.single("image"));
 
-  //COMPROBAMOS SI FALTAN DATOS DEL BODY
   if (!req.file || !req.body.disenyo) {
     return res.status(400).send("Faltan datos en la solicitud");
   }
@@ -301,56 +300,70 @@ app.post("/disenyos", upload.single("image"), async (req, res) => {
     const { imgDisenyo, descrip, idArtista, fechaCreacion } = disenyo;
     const {estilo1, estilo2} = estilos;
 
+    console.log(idArtista);
     const foto = `/assets/disenyos/${req.file.filename}`;
-
+    const idArtistaTemp=0;
+    const queryTemp="SELECT idArtista from artistas where idUsuario=(?)"
     const query1 = `INSERT INTO disenyos (imgDisenyo, descrip, idArtista, fechaCreacion) VALUES (?, ?, ?, ?)`;
     const query2 = `INSERT INTO disenyo_estilos (idDisenyo, idEstilo) VALUES (?, ?)`;
 
-    db.query(
-      query1,
-      [foto, descrip, idArtista, fechaCreacion],
-      (err, result) => {
-        if (err) {
-          console.error("Error al insertar disenyo:", err);
-          return res.status(500).send("Error al crear disenyo");
-        }
-
-        const lastId = result.insertId; 
-        console.log("AAAA" + estilos.length);
-
-        if (estilos.length == 1) {
-          db.query(query2, [lastId, estilos[0]], (err, result) => {
-            if (err) {
-              console.error("Error al insertar estilo:", err);
-              return res.status(500).send("Error en la base de datos");
-            }
-          });
-        } else if (estilos.length == 2) {
-          console.log("entramos en el 1 xe");
-
-          db.query(query2, [lastId, estilos[0]], (err, result) => {
-            if (err) {
-              console.error("Error al insertar estilos:", err);
-              return res.status(500).send("Error en la base de datos");
-            }else{
-              db.query(query2, [lastId, estilos[1]], (err, result) => {
-                console.log("entramos en el 2 xe");
-
-              });
-            }
-          });
-        } else {
-          return res.status(400).send("Debes seleccionar uno o dos estilos.");
-        }
-
-        console.log("disenyo creado con ID:", lastId);
+    db.query(queryTemp, [idArtista], (err, resultTemp) => {
+      console.log(queryTemp,[idArtista]);
+      if (err || resultTemp.length === 0) {
+        console.error("Error al obtener idArtista:", err);
+        return res.status(400).send("Error al obtener idArtista");
       }
-    );
+
+      const idArtistaTemp = resultTemp[0].idArtista;
+
+      console.log("aqui1");
+      db.query(
+        query1,
+        [foto, descrip, idArtistaTemp, fechaCreacion],
+        (err, result) => {
+          if (err) {
+            console.error("Error al insertar disenyo:", err);
+            return res.status(500).send("Error al crear disenyo");
+          }
+
+          const lastId = result.insertId; 
+          console.log("AAAA" + estilos.length);
+
+          if (estilos.length == 1) {
+            db.query(query2, [lastId, estilos[0]], (err, result) => {
+              if (err) {
+                console.error("Error al insertar estilo:", err);
+                return res.status(500).send("Error en la base de datos");
+              }
+            });
+          } else if (estilos.length == 2) {
+            console.log("entramos en el 1 xe");
+
+            db.query(query2, [lastId, estilos[0]], (err, result) => {
+              if (err) {
+                console.error("Error al insertar estilos:", err);
+                return res.status(500).send("Error en la base de datos");
+              }else{
+                db.query(query2, [lastId, estilos[1]], (err, result) => {
+                  console.log("entramos en el 2 xe");
+
+                });
+              }
+            });
+          } else {
+            return res.status(400).send("Debes seleccionar uno o dos estilos.");
+          }
+
+          console.log("disenyo creado con ID:", lastId);
+        }
+      );
+    });
   } catch (error) {
     console.error("Error al procesar los datos:", error);
     res.status(400).send("Error al procesar la información enviada");
   }
 });
+
 console.log("-------------------------------------------------------------------------------------------------------------");
 
 //-----------------------------------------------------------------------------------------------------------------------------

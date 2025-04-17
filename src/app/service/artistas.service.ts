@@ -19,6 +19,14 @@ export class ArtistasService {
     return this.httpClient.get(this.API + '/' + id);
   }
 
+  getAllArtistasByIdUsuario(idUsuario: number) {
+    console.log('este es el id a buscar ' + idUsuario);
+    let privateAPI = 'http://localhost:3000/artistas/user';
+
+    console.log(privateAPI +"/"+ idUsuario);
+    return this.httpClient.get(this.API + '/user/' + idUsuario);
+  }
+
   getAllArtistasByEstilo(idEstilo: number) {
     console.log('este es el id a buscar ' + idEstilo);
     return this.httpClient.get(this.API + '/estilos/' + idEstilo);

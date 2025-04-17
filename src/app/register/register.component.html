@@ -1,7 +1,7 @@
 <header>
   <div class="container">
     <div class="logo">
-      <h1>Tattoo Studio</h1>
+      <h1>INKARA</h1>
     </div>
   </div>
 </header>
@@ -32,9 +32,11 @@
         id="email"
         name="email"
         placeholder="Correo electrónico"
-        required
         [(ngModel)]="this.newUser.email"
         aria-label="Correo electrónico"
+        required
+        pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$"
+        (blur)="comprobarPatternEmail()"
       />
       <input
         type="password"
@@ -44,6 +46,8 @@
         required
         [(ngModel)]="this.newUser.contrasena"
         aria-label="Contraseña"
+        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{5,12}$"
+        (blur)="comprobarPatternPassword()"
       />
       <input
         type="password"

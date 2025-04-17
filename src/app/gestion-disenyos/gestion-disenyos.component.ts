@@ -9,9 +9,10 @@ import { Estilos, EstilosMap } from '../POJOs/estilos';
 import { EstilosService } from '../service/estilos.service';
 import { Disenyo, DisenyosMap } from '../POJOs/disenyos';
 import { DisenyosService } from '../service/disenyos.service';
-import { Artista } from '../POJOs/artistas';
+import { Artista, ArtistaSinMap, ArtistasMap2 } from '../POJOs/artistas';
 import { DisenyoEstilos } from '../POJOs/disenyo-estilos';
 import { DisenyosEstilosService } from '../service/disenyos-estilos.service';
+import { ArtistasService } from '../service/artistas.service';
 
 @Component({
   selector: 'app-gestion-disenyos',
@@ -42,11 +43,19 @@ export class GestionDisenyosComponent {
     idDisenyo: 0,
     idEstilo: 0
   }
+  artista: Artista = {
+    idArtista: 0,
+    nombre: '',
+    apellido: '',
+    alias: '',
+    ciudad: '',
+    foto: ''
+  }
 
   arrEstilos: Estilos[] = [];
   arrDisenyos: Disenyo[] = [];
-  arrDisenyosEstilos:number[]=[];
-  
+  arrDisenyosEstilos: number[] = [];
+
   selectedFile: File | "" = "";
   datePipe: DatePipe = inject(DatePipe);
   tokenNull = false;
@@ -54,20 +63,26 @@ export class GestionDisenyosComponent {
 
   disenyoService: DisenyosService = inject(DisenyosService);
   estilosDisenyoService: DisenyosEstilosService = inject(DisenyosEstilosService);
-  estilosService:EstilosService=inject(EstilosService);
+  estilosService: EstilosService = inject(EstilosService);
+
+  disenyos: Disenyo[] = [];
+  logService: LoginService = inject(LoginService);
+  artiService: ArtistasService = inject(ArtistasService);
+
   constructor() {
     console.log("asdad");
     const idtemp = parseInt(localStorage.getItem("id") ?? "0");
-    this.cargarDisenyosById(idtemp);
+    console.log("este es el inicio de sesion ", idtemp);
     this.rol = localStorage.getItem("rol") ?? "0";
-
-    if (localStorage.getItem("token") == null) {
-      this.tokenNull == false;
+    this.cargarArtistaPorIdUsuario(idtemp);
+    if (localStorage.getItem("token") == null || localStorage.getItem("token") == "") {
+      this.tokenNull = false;
     } else {
-      this.tokenNull == true;
+      this.tokenNull = true;
     }
     this.cargarEstilos();
   }
+
 
   cargarDisenyosById(id: number) {
     this.disenyoService.getAllArtistasByIdArtista(id).subscribe((data: any) => {
@@ -79,11 +94,23 @@ export class GestionDisenyosComponent {
       }
     });
   }
+
+  cargarArtistaPorIdUsuario(idUsuario:number){
+    console.log("buscamos ete id " +  idUsuario );
+    this.artiService.getAllArtistasByIdUsuario(idUsuario).subscribe((data: any) => {
+      this.artista = new ArtistasMap2().get(data)[0];
+      console.log("lide... aca tamo " + this.artista.idArtista);
+      this.cargarDisenyosById(this.artista.idArtista);
+    });
+
+  }
+
+
   cargarEstilos() {
     console.log("console");
     this.estilosService.getAllEstilos().subscribe((data: any) => {
       console.log("console");
-        this.arrEstilos=new EstilosMap().get(data);
+      this.arrEstilos = new EstilosMap().get(data);
     });
   }
 
@@ -127,12 +154,12 @@ export class GestionDisenyosComponent {
     });
   }
 
-  anyadirAEstilosDisenyos(){
+  anyadirAEstilosDisenyos() {
     console.log("entramos aqui");
-    this.estilosDisenyoService.addDisenyosEstilos(this.newEstiloDisenyo).subscribe((data:any)=>{
+    this.estilosDisenyoService.addDisenyosEstilos(this.newEstiloDisenyo).subscribe((data: any) => {
       console.log("entramos aqui2");
 
-      if (this.newEstiloDisenyo2.idEstilo!=0) {
+      if (this.newEstiloDisenyo2.idEstilo != 0) {
         console.log("entramos aqui3");
 
         this.estilosDisenyoService.addDisenyosEstilos(this.newEstiloDisenyo2).subscribe();

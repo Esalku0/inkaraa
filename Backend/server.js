@@ -122,6 +122,21 @@ app.get("/artistas/:id", (req, res) => {
   });
 });
 
+app.get("/artistas/user/:idUsuario", (req, res) => {
+  const { idUsuario } = req.params;
+  const query = "SELECT * FROM artistas WHERE idUsuario = ?";
+  console.log("aca lide");
+  db.query(query, [idUsuario], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Error en la base de datos");
+    } else {
+      console.log("Datos obtenidos de la base de datos:", results);
+      res.json(results);
+    }
+  });
+});
+
 app.get("/disenyos", (req, res) => {
   db.query("SELECT * FROM disenyos", (err, results) => {
     if (err) {

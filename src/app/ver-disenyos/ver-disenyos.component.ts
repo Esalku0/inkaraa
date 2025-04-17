@@ -79,6 +79,10 @@ export class VerDisenyosComponent {
     this.disenyoService.getAllDisenyosByEstilo(idEstilo).subscribe((data: any) => {
       console.log("Datos recibidos:", data);
       this.arrDisenyos = new DisenyosMap().get(data);
+      for (let item of this.arrDisenyos) {
+        item.imgDisenyo = `http://localhost:3000${item.imgDisenyo}`;
+        console.log(item.imgDisenyo);
+      }
     },
       (error) => {
         if (error.status === 404) {

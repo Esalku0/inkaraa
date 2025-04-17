@@ -15,7 +15,7 @@ import { CarrouselImagenesComponent } from '../carrousel-imagenes/carrousel-imag
     MatIconModule,
     RouterLink,
     RouterOutlet,
-    CarrouselImagenesComponent,],
+    CarrouselImagenesComponent],
   templateUrl: './ver-artistas.component.html',
   styleUrls: ['./ver-artistas.component.css'],
 })

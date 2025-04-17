@@ -1,4 +1,4 @@
-import { Usuario } from '../POJOs/usuarios';
+import { Usuario, UsuariosMap } from '../POJOs/usuarios';
 import { secretKey } from '../env/environment';
 import { Component, inject } from '@angular/core';
 import * as bcrypt from 'bcryptjs';
@@ -8,6 +8,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { Router, RouterModule } from '@angular/router';
 import { UsuariosService } from '../service/usuarios.service';
 import { ToastrService } from 'ngx-toastr';
+
 
 @Component({
   selector: 'app-register',
@@ -23,16 +24,26 @@ export class RegisterComponent {
     email: '',
     contrasena: '',
   };
+  arrUsers: Usuario[] = [];
+
   confirmPassword: string = '';
-  userService:UsuariosService = inject(UsuariosService);
-  router:Router = inject(Router);
-  popup:ToastrService=inject(ToastrService);
+  userService: UsuariosService = inject(UsuariosService);
+  router: Router = inject(Router);
+  popup: ToastrService = inject(ToastrService);
 
-  constructor() {}
+  constructor() { }
 
 
-  comprobarEmailExistente(){
-    
+  comprobarEmailExistente() {
+    this.userService.getAllUsuarios().subscribe((data: any) => {
+      this.arrUsers = new UsuariosMap().get(data);
+
+      for (let index = 0; index < this.arrUsers.length; index++) {
+        if (this.arrUsers[index].email == this.newUser.email) {
+          this.showErrorEmail();
+        }
+      }
+    });
   }
 
   comprobarPatternEmail() {
@@ -46,7 +57,8 @@ export class RegisterComponent {
   comprobarPatternPassword() {
     const passwPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$/;
     if (!passwPattern.test(this.newUser.contrasena)) {
-      alert("Por favor, introduce una contrasenya válida.");
+      this.popup.error('Por favor, introduce una contrasenya válida.', 'Error');
+
       this.newUser.contrasena = ""; // Opcional: Limpia el campo si es inválido
     }
   }
@@ -55,24 +67,39 @@ export class RegisterComponent {
     const salt = bcrypt.genSaltSync(10); // Genera un salt (complejidad 10)
     return bcrypt.hashSync(password, salt); // Encripta la contraseña
   }
-  
-  enviar() {
-    // Verificación de las contraseñas
+
+  enviar(): void {
     if (!this.newUser || this.newUser.contrasena !== this.confirmPassword) {
       alert('Las contraseñas no coinciden');
-      return false;
+      return;
     }
-  //  this.newUser.contrasena = this.encryptPassword(this.newUser.contrasena);
-  //  console.log(this.newUser.contrasena);
-    this.userService.addUsuario(this.newUser).subscribe((data: any) => {
+    console.log("entramos aqui ");
+    this.userService.getAllUsuarios().subscribe((data: any) => {
+      this.arrUsers = new UsuariosMap().get(data);
 
-      this.router.navigate(['/login']);
+      for (let index = 0; index < this.arrUsers.length; index++) {
+        console.log("tenemos: " + this.arrUsers[index].email)
+        console.log("buscamos " + this.newUser.email)
+        if (this.arrUsers[index].email == this.newUser.email) {
+          this.showErrorEmail();
+          return;
+        }
+      }
+
+      this.userService.addUsuario(this.newUser).subscribe(() => {
+        this.showSuccess();
+        this.router.navigate(['/login']);
+      });
     });
-    return true;
   }
 
 
+
   showSuccess() {
-    this.popup.success('¡Movimiento realizado correctamente!', '¡Perfecto!');
+    this.popup.success('Proceso realizado correctamente!', '¡Perfecto!');
+  }
+
+  showErrorEmail() {
+    this.popup.error('¡El Email ya existe en la Base de Datos!', '¡Lastima!');
   }
 }

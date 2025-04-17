@@ -34,7 +34,8 @@
             "outputPath": "dist/demo",
             "polyfills": ["zone.js"],
             "scripts": [],
-            "styles": ["src/global_styles.css"],
+            "styles": ["src/global_styles.css",
+            "node_modules/ngx-toastr/toastr.css"],
             "tsConfig": "tsconfig.app.json"
           }
         },

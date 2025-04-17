@@ -239,6 +239,8 @@ app.get("/usuarios", async (req, res) => {
     }
   });
 });
+
+
 app.delete("/usuarios/:id", async (req, res) => {
   db.query("DELETE FROM usuarios where id= ? ", [req.params.id], (err) => {
     if (err) return res.status(500).send(err); // Manejo de errores al eliminar.

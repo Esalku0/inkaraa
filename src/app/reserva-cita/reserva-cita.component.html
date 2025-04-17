@@ -10,65 +10,46 @@
   <section class="appointment-section">
     <div class="appointment-container">
       <h2>Reserva tu Cita</h2>
-      <form action="#" id="appointment-form">
-        <input
-          type="text"
-          id="idCliente"
-          name="idCliente"
-          [(ngModel)]="this.newReserva.idCliente"
-          hidden
-        />
 
-        <input
-          type="text"
-          id="name"
-          name="name"
-          placeholder="Tu nombre completo"
-          required
-        />
-        <input
-          type="email"
-          id="email"
-          name="email"
-          placeholder="Correo electrónico"
-          required
-        />
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          placeholder="Número de teléfono"
-          required
-        />
-        <label for="date">Selecciona la fecha:</label>
-        <input type="date" id="date" name="date" required min="2025-03-08" />
-        <label for="artist">Elige un tatuador:</label>
-        <select name="artist" id="artist" required>
-          <option value="" disabled selected>Elige un tatuador</option>
-          <option value="artist1">Artista 1</option>
-          <option value="artist2">Artista 2</option>
-          <option value="artist3">Artista 3</option>
-        </select>
-        <label for="details">Detalles del tatuaje:</label>
-        <textarea
-          id="details"
-          name="details"
-          placeholder="Detalles del tatuaje"
-          required
-        ></textarea>
-        <label for="sketch">Sube un boceto del tatuaje:</label>
-        <input type="file" id="sketch" name="sketch" accept="image/*" />
-        <label for="comments">Comentarios adicionales:</label>
+      <label>Selecciona la fecha:</label>
+      <input
+        type="date"
+        id="date"
+        name="date"
+        required
+        min="2025-03-08"
+        [(ngModel)]="this.newReserva.fechaReserva"
+      />
+      <label>Elige un tatuador:</label>
+      <select
+        name="artist"
+        id="artist"
+        required
+        [(ngModel)]="this.newReserva.idArtista"
+      >
+        <option value="" disabled selected>Elige un tatuador</option>
+        @for (item of this.arrArtistas; track $index) {
+        <option value="{{ item.idArtista }}">
+          {{ item.nombre }} - {{ item.alias }}
+        </option>
+        }
+      </select>
+      <label>Detalles del tatuaje:</label>
+      <textarea
+        id="details"
+        name="details"
+        placeholder="Detalles del tatuaje"
+        required
+        [(ngModel)]="this.newReserva.detalles"
+      >
+      </textarea>
+      <label>Sube un boceto del tatuaje:</label>
+      <input type="file" (change)="onFileSelected($event)" id="foto" />
 
-        <textarea
-          id="comments"
-          name="comments"
-          placeholder="Comentarios adicionales"
-        ></textarea>
-        <button type="submit" class="cta-button">Reservar Cita</button>
-      </form>
+      <button type="button" class="cta-button" (click)="this.anyadirReserva()">Reservar Cita</button>
     </div>
   </section>
+  
 
   <footer>
     <div class="footer-content">
@@ -76,5 +57,4 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
 </body>

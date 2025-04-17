@@ -240,7 +240,6 @@ app.get("/usuarios", async (req, res) => {
   });
 });
 
-
 app.delete("/usuarios/:id", async (req, res) => {
   db.query("DELETE FROM usuarios where id= ? ", [req.params.id], (err) => {
     if (err) return res.status(500).send(err); // Manejo de errores al eliminar.
@@ -315,17 +314,17 @@ app.post("/disenyos", upload.single("image"), async (req, res) => {
     const disenyo = JSON.parse(req.body.disenyo);
     const estilos = JSON.parse(req.body.estilos);
     const { imgDisenyo, descrip, idArtista, fechaCreacion } = disenyo;
-    const {estilo1, estilo2} = estilos;
+    const { estilo1, estilo2 } = estilos;
 
     console.log(idArtista);
     const foto = `/assets/disenyos/${req.file.filename}`;
-    const idArtistaTemp=0;
-    const queryTemp="SELECT idArtista from artistas where idUsuario=(?)"
+    const idArtistaTemp = 0;
+    const queryTemp = "SELECT idArtista from artistas where idUsuario=(?)";
     const query1 = `INSERT INTO disenyos (imgDisenyo, descrip, idArtista, fechaCreacion) VALUES (?, ?, ?, ?)`;
     const query2 = `INSERT INTO disenyo_estilos (idDisenyo, idEstilo) VALUES (?, ?)`;
 
     db.query(queryTemp, [idArtista], (err, resultTemp) => {
-      console.log(queryTemp,[idArtista]);
+      console.log(queryTemp, [idArtista]);
       if (err || resultTemp.length === 0) {
         console.error("Error al obtener idArtista:", err);
         return res.status(400).send("Error al obtener idArtista");
@@ -343,7 +342,7 @@ app.post("/disenyos", upload.single("image"), async (req, res) => {
             return res.status(500).send("Error al crear disenyo");
           }
 
-          const lastId = result.insertId; 
+          const lastId = result.insertId;
           console.log("AAAA" + estilos.length);
 
           if (estilos.length == 1) {
@@ -360,10 +359,9 @@ app.post("/disenyos", upload.single("image"), async (req, res) => {
               if (err) {
                 console.error("Error al insertar estilos:", err);
                 return res.status(500).send("Error en la base de datos");
-              }else{
+              } else {
                 db.query(query2, [lastId, estilos[1]], (err, result) => {
                   console.log("entramos en el 2 xe");
-
                 });
               }
             });
@@ -381,7 +379,9 @@ app.post("/disenyos", upload.single("image"), async (req, res) => {
   }
 });
 
-console.log("-------------------------------------------------------------------------------------------------------------");
+console.log(
+  "-------------------------------------------------------------------------------------------------------------"
+);
 
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
@@ -405,13 +405,12 @@ const storage2 = multer.diskStorage({
 console.log("2", storage2);
 
 const upload2 = multer({ storage: storage2 });
-console.log("2",upload2);
-
+console.log("2", upload2);
 
 //Chequeamos que estamos haciendo un post de artistas, es decir, que estamos subiendo un artista, pero vamos a ejecutar
 //varias cositas, primero vamos a subir la imagen, luego vamos a subir los datos del artista
 app.post("/artistas", upload2.single("image"), async (req, res) => {
-  console.log("2",upload2.single("image"));
+  console.log("2", upload2.single("image"));
   console.log("Contenido de req.body:", req.body);
   console.log("Archivo recibido en req.file:", req.file);
 
@@ -469,6 +468,67 @@ app.post("/artistas", upload2.single("image"), async (req, res) => {
     console.error("Error al procesar los datos:", error);
     res.status(400).send("Error al procesar la información enviada");
   }
+});
+
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+//                                              AÑADIR RESERVAS EN LA BBDD
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+
+const storage3 = multer.diskStorage({
+  destination: (req, file, cb) => {
+    // Ruta para subir datos y una imagen
+    cb(null, "../assets/bocetos");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Generar un nombre único para evitar conflictos
+  },
+});
+console.log("3", storage3);
+
+const upload3 = multer({ storage: storage3 });
+console.log("3", upload3);
+
+app.post("/reservas", upload3.single("image"), async (req, res) => {
+
+  console.log("reservas");
+  console.log(req.body.reservas);
+
+  if (!req.file || !req.body.reservas) {
+    return res.status(400).send("Faltan datos en la solicitud");
+  }
+  //Pillamos el artista
+  const reserva = JSON.parse(req.body.reservas);
+  //sacamos los datos del artista!!
+  const {
+    idReserva,
+    idArtista,
+    idCliente,
+    fechaReserva,
+    detalles,
+    bocet,
+    idEstado,
+  } = reserva;
+
+  const foto = `/assets/bocetos/${req.file.filename}`;
+
+  const query = "INSERT INTO reservas (idReserva,idArtista,idCliente,fechaReserva,detalles,boceto,idEstado) VALUES (?,?,?,?,?,?,?)";
+
+  db.query(
+    query,
+    [idReserva, idArtista, idCliente, fechaReserva, detalles, foto, idEstado],
+    (err, result) => {
+      if (err) {
+        console.error("Error al insertar usuario:", err);
+        return res.status(500).send("Error al crear usuario");
+      }
+    }
+  );
 });
 
 //mi middleware timidin, para verificar el token

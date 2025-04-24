@@ -5,6 +5,7 @@ import { Reserva } from '../POJOs/reservas';
 @Injectable({
   providedIn: 'root'
 })
+
 export class ReservasService {
 
   private API = 'http://localhost:3000/reservas';
@@ -14,7 +15,13 @@ export class ReservasService {
     return this.httpClient.get(this.API);
   }
 
-  putReservas(newReserva: FormData) {
+  getAllReservasById(idReserva: string) {
+    console.log("GET", idReserva);
+    console.log(this.API + "/id/" + idReserva);
+    return this.httpClient.get(this.API + "/id/" + idReserva);
+  }
+
+  postReservas(newReserva: FormData) {
     console.log(this.API, newReserva);
     return this.httpClient.post(this.API, newReserva);
   }

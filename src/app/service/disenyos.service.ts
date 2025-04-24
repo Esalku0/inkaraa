@@ -8,7 +8,7 @@ import { Disenyo } from '../POJOs/disenyos';
 export class DisenyosService {
 
   private API = 'http://localhost:3000/disenyos';
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) { }
 
   getAllDisenyos() {
     console.log(this.httpClient.get(this.API));
@@ -25,16 +25,16 @@ export class DisenyosService {
     return this.httpClient.get(this.API + '/estilos/' + idEstilo);
   }
 
-postDisenyo(formData: FormData) {
+  postDisenyo(formData: FormData) {
     console.log("FormData antes de enviarse:");
-    
+
     formData.forEach((value, key) => {
-        console.log(`${key}:`, value);
+      console.log(`${key}:`, value);
     });
 
     return this.httpClient.post(this.API, formData);
-}
+  }
 
-  
+
 
 }

@@ -10,6 +10,7 @@ import { AuthGuard } from '../auth.guard';
 import { GestionDisenyosComponent } from './gestion-disenyos/gestion-disenyos.component';
 import { GestionReservasComponent } from './gestion-reservas/gestion-reservas.component';
 import { PerfilArtistasComponent } from './perfil-artistas/perfil-artistas.component';
+import { CalendarioComponent } from './calendario/calendario.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -22,8 +23,8 @@ export const routes: Routes = [
   { path: 'gestionReservas', component: GestionReservasComponent },
   { path: 'verArtista/:id', component: PerfilArtistasComponent },
   { path: 'gestionArtista', component: PantallaGestionComponentArtista },
-//  { path: 'gestionArtista', component: PantallaGestionComponentArtista,canActivate: [AuthGuard] },
-
+  { path: 'VerReservas', component: CalendarioComponent },
+ //{ path: 'gestionArtista', component: PantallaGestionComponentArtista,canActivate: [AuthGuard] },
   { path: '**', redirectTo: '' },
 ];
 

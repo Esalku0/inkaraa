@@ -11,14 +11,29 @@
     font-family: 'Roboto', sans-serif;
     line-height: 1.6;
     background-color: #1a1a1a;
-    color: #1a1a1a;
+    color: #ffffff;
     font-size: 16px;
     overflow-x: hidden;
   }
   
   .proba{
-    background-color: rgba(240, 222, 222, 0.925) ;
+    background-color: #292727 ;
   }
+
+  .fc-daygrid-day {
+    background-color: #f0f8ff; /* Cambiar color de fondo de los días */
+  }
+  
+  .fc-day-today {
+    background-color: #ffcccb !important; /* Resaltar el día actual */
+  }
+  
+  .fc-event {
+    background-color: #4caf50 !important; /* Cambiar color de los eventos */
+    border-radius: 8px; /* Redondear eventos */
+    font-weight: bold; /* Texto más fuerte */
+  }
+  
 
    /* Header Styles */
    header {

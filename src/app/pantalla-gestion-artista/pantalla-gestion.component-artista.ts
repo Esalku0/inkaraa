@@ -87,8 +87,7 @@ export class PantallaGestionComponentArtista {
     formData.append('tempPass', this.tempPass);
 
     //nada, aqui todo normal, llamamos a nuestro querido observable donde le pasamos el formdata en vez de un obejto
-    this.artiService.addArtista(formData).subscribe({
-      next: (response: any) => {
+    this.artiService.addArtista(formData).subscribe({next: (response: any) => {
         console.log("Artista añadido con éxito:", response);
         this.cargarTodosUsuario();
         this.vaciarUsuario();

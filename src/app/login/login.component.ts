@@ -7,6 +7,7 @@ import { CarrouselImagenesComponent } from '../carrousel-imagenes/carrousel-imag
 import { LoginService } from '../service/login.service';
 import { secretKey } from '../env/environment';
 import bcrypt from 'bcryptjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -25,6 +26,8 @@ export class LoginComponent {
   password: string = '';
  
   logService: LoginService = inject(LoginService);
+    popup: ToastrService = inject(ToastrService);
+  
   constructor( ) {
 
   }
@@ -33,14 +36,25 @@ export class LoginComponent {
     console.log(this.username);
     console.log(this.password);
     //var dev = this.encryptPassword(this.password);
-    this.logService.login(this.username,this.password).subscribe((data:any)=>{
-      //Pq justamente estos valores? Pq son los que hemos definido en el backend
-      //literalmente es lo que nos devuelve el metodo de login
-      //se lo pasamos directamente a la funcion de session storage
+    this.logService.login(this.username,this.password).subscribe({next:(data:any)=>{
+      this.showSuccess();
       this.logService.setSessionStorage(data.token,data.rol,data.id);
       this.router.navigate(['/']); 
-    });
+    },error:(error:any)=>{
+      this.popup.error("No se ha encontrado ningun usuario con ese Email y Contraseña", '¡Lastima!');
+    },
+    }); 
+ 
   }
+  
+  showSuccess() {
+    this.popup.success('Proceso realizado correctamente!', '¡Perfecto!');
+  }
+
+  showErrorEmail() {
+    this.popup.error('¡El Email ya existe en la Base de Datos!', '¡Lastima!');
+  }
+  
 
 
 }

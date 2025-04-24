@@ -297,7 +297,7 @@ console.log("1", upload);
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
-//                                              SUBIR DISEÑO A LA BBDD
+//                                              SUBIR DISEÑO A LA BBDD         
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
@@ -480,6 +480,38 @@ app.post("/artistas", upload2.single("image"), async (req, res) => {
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
 
+app.get("/reservas", (req, res) => {
+  db.query("SELECT * FROM reservas", (err, results) => {
+    if (err) {
+      console.error("Error al ejecutar la consulta:", err);
+      return res.status(500).send("Error en el servidor");
+    }
+    res.json(results);
+  });
+});
+
+app.get("/reservas/id/:idReserva", (req, res) => {
+  console.log("ENTREM EN idReserva");
+  const { idReserva } = req.params;
+  const query = "SELECT * from reservas where idReserva = ?";
+  db.query(query, [idReserva], (err, results) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Error en la base de datos");
+    } else {
+      // Verificamos si hay resultados
+      if (results.length === 0) {
+        res.status(404).send("..No va..");
+      } else {
+        // Si hay resultados, los enviamos como respuesta
+        res.json(results);
+        console.log("todo bien");
+      }
+    }
+  });
+});
+
+
 const storage3 = multer.diskStorage({
   destination: (req, file, cb) => {
     // Ruta para subir datos y una imagen
@@ -495,7 +527,6 @@ const upload3 = multer({ storage: storage3 });
 console.log("3", upload3);
 
 app.post("/reservas", upload3.single("image"), async (req, res) => {
-
   console.log("reservas");
   console.log(req.body.reservas);
 
@@ -517,15 +548,19 @@ app.post("/reservas", upload3.single("image"), async (req, res) => {
 
   const foto = `/assets/bocetos/${req.file.filename}`;
 
-  const query = "INSERT INTO reservas (idReserva,idArtista,idCliente,fechaReserva,detalles,boceto,idEstado) VALUES (?,?,?,?,?,?,?)";
+  const query =
+    "INSERT INTO reservas (idReserva,idArtista,idCliente,fechaReserva,detalles,boceto,idEstado) VALUES (?,?,?,?,?,?,?)";
 
   db.query(
     query,
     [idReserva, idArtista, idCliente, fechaReserva, detalles, foto, idEstado],
     (err, result) => {
       if (err) {
-        console.error("Error al insertar usuario:", err);
-        return res.status(500).send("Error al crear usuario");
+        console.error("Error al insertar reserva:", err);
+        return res.status(500).send("Error al crear reserva");
+      } else {
+        console.log("todo bien, salimos");
+        res.json({ message: "Reserva creada correctamente" });
       }
     }
   );

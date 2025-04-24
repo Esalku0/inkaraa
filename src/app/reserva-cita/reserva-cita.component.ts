@@ -8,6 +8,8 @@ import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { CarrouselImagenesComponent } from '../carrousel-imagenes/carrousel-imagenes.component';
 import { ArtistasService } from '../service/artistas.service';
 import { Artista, ArtistasMap } from '../POJOs/artistas';
+import { bindCallback } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-reserva-cita',
@@ -34,11 +36,12 @@ export class ReservaCitaComponent {
     boceto: '',
     idEstado: 1
   }
-  arrArtistas:Artista[]=[];
+  arrArtistas: Artista[] = [];
 
-  artiService:ArtistasService=inject(ArtistasService);
+  artiService: ArtistasService = inject(ArtistasService);
   reservaService: ReservasService = inject(ReservasService);
   router: Router = inject(Router);
+  popup: ToastrService = inject(ToastrService);
 
   selectedFile: File | "" = "";
 
@@ -59,8 +62,6 @@ export class ReservaCitaComponent {
 
 
   anyadirReserva() {
-
-
     const formData = new FormData();
     //al formdata le metemos el objeto artista
     formData.append('reservas', JSON.stringify(this.newReserva));
@@ -68,25 +69,37 @@ export class ReservaCitaComponent {
     formData.append('image', this.selectedFile);
     console.log("hola");
 
-    this.reservaService.putReservas(formData).subscribe((data:any)=>{
-
-      this.router.navigate(['/']);
-
-        
+    this.reservaService.postReservas(formData).subscribe({next:(data:any)=>{
+      this.showSuccess();
+      this.router.navigate(['/home']);
+    },error:(err:any)=>{
+      this.showError();
+    },
     });
   }
+
+
 
   cargarArtistas() {
-    this.artiService.getAllArtistas().subscribe((data:any)=>{
-        this.arrArtistas=new ArtistasMap().get(data);
+    this.artiService.getAllArtistas().subscribe((data: any) => {
+      this.arrArtistas = new ArtistasMap().get(data);
     },
-    (error) => {
-      if (error.status === 404) {
-        console.warn("error");
-      } else {
-        console.error("Error ", error);
-      }
-    });
+      (error) => {
+        if (error.status === 404) {
+          console.warn("error");
+        } else {
+          console.error("Error ", error);
+        }
+      });
   }
+
+  showSuccess() {
+    this.popup.success('Reserva realizada correctamente!', '¡Perfecto!');
+  }
+  showError() {
+    this.popup.error('Hubo un error al realizar la reserva', '¡Perfecto!');
+  }
+
+
 
 }

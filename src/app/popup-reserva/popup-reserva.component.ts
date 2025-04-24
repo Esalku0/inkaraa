@@ -43,6 +43,7 @@ export class PopupReservaComponent implements OnChanges {
       next: (data: any) => {
         console.log("dentrodel output");
         this.newReserva = new ReservaSinMap().get(data);
+        this.newReserva.boceto=`http://localhost:3000${this.newReserva.boceto}`;
         console.log("xd" , this.newReserva);
       },
       error: (err: any) => {

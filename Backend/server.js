@@ -240,6 +240,18 @@ app.get("/usuarios", async (req, res) => {
   });
 });
 
+app.get("/usuarios/id/:id", async (req, res) => {
+  let { id } = req.params;
+  db.query("SELECT * FROM usuarios where id = ?", id, (err, results) => {
+    if (err) {
+      console.error("Error al ejecutar la consulta:", err);
+      return res.status(500).send("Error en el servidor");
+    } else {
+      res.json(results);
+    }
+  });
+});
+
 app.delete("/usuarios/:id", async (req, res) => {
   db.query("DELETE FROM usuarios where id= ? ", [req.params.id], (err) => {
     if (err) return res.status(500).send(err); // Manejo de errores al eliminar.
@@ -297,7 +309,7 @@ console.log("1", upload);
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
-//                                              SUBIR DISEÑO A LA BBDD         
+//                                              SUBIR DISEÑO A LA BBDD
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
@@ -490,6 +502,16 @@ app.get("/reservas", (req, res) => {
   });
 });
 
+app.get("/reservasActivas", (req, res) => {
+  db.query("SELECT * FROM reservas where idEstado<>3", (err, results) => {
+    if (err) {
+      console.error("Error al ejecutar la consulta:", err);
+      return res.status(500).send("Error en el servidor");
+    }
+    res.json(results);
+  });
+});
+
 app.get("/reservas/id/:idReserva", (req, res) => {
   console.log("ENTREM EN idReserva");
   const { idReserva } = req.params;
@@ -510,7 +532,26 @@ app.get("/reservas/id/:idReserva", (req, res) => {
     }
   });
 });
+app.get("/reservas/estado/:idReserva", (req, res) => {
+  console.log("✅ GET recibido para idReserva:", req.params.idReserva);
+  res.send(`Reserva con ID ${req.params.idReserva}`);
+});
 
+app.put("/reservas/estado/:idReserva", (req, res) => {
+  console.log("update");
+
+  var sql = "UPDATE reservas SET idEstado = ? WHERE idReserva = ?"; // ✅ Evita concatenación peligrosa
+  var body = [req.body.idEstado, req.params.idReserva]; // ✅ Pasar parámetros correctamente
+
+  db.query(sql, body, (err, result) => {
+    if (err) {
+      console.error("❌ Error al actualizar reserva:", err);
+      return res.status(500).json({ message: "Error al actualizar la reserva", error: err }); // Enviar error como JSON
+    }
+    console.log("aaa");
+    res.status(200).json({ message: "Reserva actualizada exitosamente", result: result }); // Enviar respuesta como JSON
+  });
+});
 
 const storage3 = multer.diskStorage({
   destination: (req, file, cb) => {

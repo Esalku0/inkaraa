@@ -14,6 +14,12 @@ export class UsuariosService {
     return this.httpClient.get(this.API);
   }
 
+  getUsuariosById(id:number){
+    console.log("GETAAAA", id);
+    console.log(this.API + "/id/" + id);
+    return this.httpClient.get(this.API + "/id/" + id);
+  }
+
   addUsuario(newUser: Usuario){
     console.log(newUser.contrasena);
     return this.httpClient.post(this.API,newUser);

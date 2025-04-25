@@ -13,6 +13,7 @@ import { PopupReservaComponent } from '../popup-reserva/popup-reserva.component'
 import { Reserva, ReservasMap } from '../POJOs/reservas';
 import { ReservasService } from '../service/reservas.service';
 import { objEvento } from '../POJOs/eventoObligado';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-calendario',
   imports: [FullCalendarModule, CommonModule,
@@ -47,7 +48,9 @@ export class CalendarioComponent {
   logService: LoginService = inject(LoginService);
   router: Router = inject(Router);
   resService: ReservasService = inject(ReservasService);
-  ENVIAR:number=7;
+  popup: ToastrService = inject(ToastrService);
+
+  ENVIAR: number = 0;
   constructor(private http: HttpClient) {
     this.rol = this.logService.getRol();
     console.log(this.rol);
@@ -58,13 +61,51 @@ export class CalendarioComponent {
     console.log("obrim");
 
     this.ENVIAR = info.event.extendedProps?.idReserva;
-    console.log("montolivete " ,this.ENVIAR);
+    console.log("montolivete ", this.ENVIAR);
     this.showPopup = true;
   }
 
   closePopup() {
     console.log("tanquem");
     this.showPopup = false;
+  }
+
+  rechazarReserva(idReserva: number) {
+    this.showPopup = false;
+
+    console.log("hemos llegado");
+
+    const idEstado = 3;
+
+    this.resService.putReservas(idReserva, idEstado).subscribe({
+      next: (data: any) => {
+        this.popup.error("Reserva rechaza...", "Rechazada.")
+        console.log("cancelada");
+        this.cargarReservas();
+
+      }, error: (err: any) => {
+        console.error(err);
+      }
+    });
+  }
+
+  aceptarReserva(idReserva: number) {
+    this.showPopup = false;
+
+    console.log("hemos llegado");
+
+    const idEstado = 2;
+    this.resService.putReservas(idReserva, idEstado).subscribe({
+      next: (data: any) => {
+        this.popup.success('Reserva Aceptada!', 'Aceptada!');
+
+        console.log("aceptada");
+        this.cargarReservas();
+
+      }, error: (err: any) => {
+        console.error(err);
+      }
+    });
   }
 
   cerrarSesion() {
@@ -76,7 +117,7 @@ export class CalendarioComponent {
   cargarReservas() {
     console.log("aki");
 
-    this.resService.getAllReservas().subscribe((data: any) => {
+    this.resService.getAllReservasActivas().subscribe((data: any) => {
       console.log("aki");
       this.arrReservas = new ReservasMap().get(data);
 
@@ -86,16 +127,19 @@ export class CalendarioComponent {
         var newobjEvento: objEvento = { idReserva: 0, title: "", start: "" }
 
         newobjEvento.idReserva = this.arrReservas[index].idReserva;
-        newobjEvento.title = "Cita tatuaje$$$", 
-        newobjEvento.start = String(this.arrReservas[index].fechaReserva);
+        newobjEvento.title = "Cita tatuaje$$$",
+          newobjEvento.start = String(this.arrReservas[index].fechaReserva);
         // newobjEvento.start = "2025-04-25";
         this.arrEvents.push(newobjEvento);
       }
-    //  console.log(this.arrEvents);
+      //  console.log(this.arrEvents);
 
       this.calendarOptions.events = this.arrEvents;
     });
   }
+
+
+
 
   calendarOptions: CalendarOptions = {
     plugins: [dayGridPlugin, interactionPlugin],

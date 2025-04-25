@@ -63,6 +63,8 @@
     <app-popup-reserva
       [idReserva]="ENVIAR"
       (cerrarPopup)="closePopup()"
+      (rechazarReserva)="rechazarReserva($any($event))"
+      (aceptarReserva)="aceptarReserva($any($event))"
     ></app-popup-reserva>
     }
     

@@ -14,6 +14,9 @@ export class ReservasService {
   getAllReservas() {
     return this.httpClient.get(this.API);
   }
+  getAllReservasActivas() {
+    return this.httpClient.get("http://localhost:3000/reservasActivas");
+  }
 
   getAllReservasById(idReserva: string) {
     console.log("GET", idReserva);
@@ -26,7 +29,15 @@ export class ReservasService {
     return this.httpClient.post(this.API, newReserva);
   }
 
+  putReservas(idReserva: number, idEstado: number) {
+    console.log("aqui estamoooos");
+    //  private API = 'http://localhost:3000/reservas';
 
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const body = { idReserva, idEstado }
+    console.log(this.API + '/estado/' + idReserva, body, { headers: headers });
+    return this.httpClient.put(this.API + '/estado/' + idReserva, body, { headers: headers });
+  }
 
 
 }

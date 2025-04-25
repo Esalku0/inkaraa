@@ -291,19 +291,7 @@ app.post("/usuarios", async (req, res) => {
 //esto nos permite asignar de donde visualizar las imagenes, en este caso, la carpeta assets
 app.use("/assets", express.static(path.join(__dirname, "../assets")));
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    // Ruta para subir datos y una imagen
-    cb(null, "../assets/disenyos");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Generar un nombre único para evitar conflictos
-  },
-});
-console.log("1", storage);
 
-const upload = multer({ storage });
-console.log("1", upload);
 
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
@@ -316,6 +304,19 @@ console.log("1", upload);
 //-----------------------------------------------------------------------------------------------------------------------------
 
 //ealiaga OJITO, TIENE QUE AÑADIR 2 SI AÑADIMOS 2, REVISALO JEFE!!!
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    // Ruta para subir datos y una imagen
+    cb(null, "../assets/disenyos");
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Generar un nombre único para evitar conflictos
+  },
+});
+
+const upload = multer({ storage });
+
 app.post("/disenyos", upload.single("image"), async (req, res) => {
   console.log("1", upload.single("image"));
 
@@ -391,10 +392,6 @@ app.post("/disenyos", upload.single("image"), async (req, res) => {
   }
 });
 
-console.log(
-  "-------------------------------------------------------------------------------------------------------------"
-);
-
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
@@ -414,10 +411,7 @@ const storage2 = multer.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname)); // Generar un nombre único para evitar conflictos
   },
 });
-console.log("2", storage2);
-
 const upload2 = multer({ storage: storage2 });
-console.log("2", upload2);
 
 //Chequeamos que estamos haciendo un post de artistas, es decir, que estamos subiendo un artista, pero vamos a ejecutar
 //varias cositas, primero vamos a subir la imagen, luego vamos a subir los datos del artista
@@ -532,26 +526,34 @@ app.get("/reservas/id/:idReserva", (req, res) => {
     }
   });
 });
-app.get("/reservas/estado/:idReserva", (req, res) => {
-  console.log("✅ GET recibido para idReserva:", req.params.idReserva);
-  res.send(`Reserva con ID ${req.params.idReserva}`);
-});
 
 app.put("/reservas/estado/:idReserva", (req, res) => {
   console.log("update");
 
-  var sql = "UPDATE reservas SET idEstado = ? WHERE idReserva = ?"; // ✅ Evita concatenación peligrosa
-  var body = [req.body.idEstado, req.params.idReserva]; // ✅ Pasar parámetros correctamente
+  var sql = "UPDATE reservas SET idEstado = ? WHERE idReserva = ?"; 
+  var body = [req.body.idEstado, req.params.idReserva]; 
 
   db.query(sql, body, (err, result) => {
     if (err) {
       console.error("❌ Error al actualizar reserva:", err);
-      return res.status(500).json({ message: "Error al actualizar la reserva", error: err }); // Enviar error como JSON
+      return res.status(500).json({ message: "Error al actualizar la reserva", error: err }); 
     }
     console.log("aaa");
-    res.status(200).json({ message: "Reserva actualizada exitosamente", result: result }); // Enviar respuesta como JSON
+    res.status(200).json({ message: "Reserva actualizada exitosamente", result: result }); 
   });
 });
+
+
+//---------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+//                                              AÑADIR RESERVAS IMAGEN
+//---------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+
 
 const storage3 = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -559,13 +561,11 @@ const storage3 = multer.diskStorage({
     cb(null, "../assets/bocetos");
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname)); // Generar un nombre único para evitar conflictos
+    cb(null, Date.now() + path.extname(file.originalname));
   },
 });
-console.log("3", storage3);
 
 const upload3 = multer({ storage: storage3 });
-console.log("3", upload3);
 
 app.post("/reservas", upload3.single("image"), async (req, res) => {
   console.log("reservas");
@@ -607,6 +607,7 @@ app.post("/reservas", upload3.single("image"), async (req, res) => {
   );
 });
 
+//EALIAGA PERSONALIZADO
 //mi middleware timidin, para verificar el token
 //vasicamente vamos a comprobar si tiene token o no, si no tiene, devolvera error.
 //se puede hacer tambien para comprobar roles y eso

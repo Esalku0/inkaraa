@@ -127,7 +127,7 @@ export class CalendarioComponent {
         var newobjEvento: objEvento = { idReserva: 0, title: "", start: "" }
 
         newobjEvento.idReserva = this.arrReservas[index].idReserva;
-        newobjEvento.title = "Cita tatuaje$$$",
+        newobjEvento.title = "Cita tatuaje",
           newobjEvento.start = String(this.arrReservas[index].fechaReserva);
         // newobjEvento.start = "2025-04-25";
         this.arrEvents.push(newobjEvento);

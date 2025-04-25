@@ -11,8 +11,8 @@ import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
-  imports: [   
-     CommonModule,
+  imports: [
+    CommonModule,
     FormsModule,
     MatIconModule,
     RouterLink,
@@ -20,15 +20,16 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
+
 export class LoginComponent {
-  router:Router = inject(Router);
+  router: Router = inject(Router);
   username: string = '';
   password: string = '';
- 
+
   logService: LoginService = inject(LoginService);
-    popup: ToastrService = inject(ToastrService);
-  
-  constructor( ) {
+  popup: ToastrService = inject(ToastrService);
+
+  constructor() {
 
   }
 
@@ -36,17 +37,17 @@ export class LoginComponent {
     console.log(this.username);
     console.log(this.password);
     //var dev = this.encryptPassword(this.password);
-    this.logService.login(this.username,this.password).subscribe({next:(data:any)=>{
-      this.showSuccess();
-      this.logService.setSessionStorage(data.token,data.rol,data.id);
-      this.router.navigate(['/']); 
-    },error:(error:any)=>{
-      this.popup.error("No se ha encontrado ningun usuario con ese Email y Contraseña", '¡Lastima!');
-    },
-    }); 
- 
+    this.logService.login(this.username, this.password).subscribe({
+      next: (data: any) => {
+        //  this.showSuccess();
+        this.logService.setSessionStorage(data.token, data.rol, data.id);
+        this.router.navigate(['/']);
+      }, error: (error: any) => {
+        this.popup.error("No se ha encontrado ningun usuario con ese Email y Contraseña", '¡Lastima!');
+      },
+    });
   }
-  
+
   showSuccess() {
     this.popup.success('Proceso realizado correctamente!', '¡Perfecto!');
   }
@@ -54,7 +55,7 @@ export class LoginComponent {
   showErrorEmail() {
     this.popup.error('¡El Email ya existe en la Base de Datos!', '¡Lastima!');
   }
-  
+
 
 
 }

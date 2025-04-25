@@ -4,7 +4,6 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
-  
 }
 
 body {
@@ -15,7 +14,8 @@ body {
   color: #fff;
   font-size: 16px;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: auto;
+
 }
 
 header {
@@ -28,7 +28,6 @@ header {
   padding: 20px 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   margin-bottom: 0; /* Aseguramos que no haya margen inferior en el header */
-
 }
 
 header .container {

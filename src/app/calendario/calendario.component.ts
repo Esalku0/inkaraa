@@ -14,6 +14,10 @@ import { Reserva, ReservasMap } from '../POJOs/reservas';
 import { ReservasService } from '../service/reservas.service';
 import { objEvento } from '../POJOs/eventoObligado';
 import { ToastrService } from 'ngx-toastr';
+import { Artista, ArtistaSinMap, ArtistasMap } from '../POJOs/artistas';
+import { ArtistasService } from '../service/artistas.service';
+
+
 @Component({
   selector: 'app-calendario',
   imports: [FullCalendarModule, CommonModule,
@@ -34,6 +38,14 @@ export class CalendarioComponent {
     boceto: '',
     idEstado: 0
   }
+  newArtista: Artista = {
+    idArtista: 0,
+    nombre: '',
+    apellido: '',
+    alias: '',
+    ciudad: '',
+    foto: null
+  }
 
 
   showPopup = false;
@@ -49,12 +61,25 @@ export class CalendarioComponent {
   router: Router = inject(Router);
   resService: ReservasService = inject(ReservasService);
   popup: ToastrService = inject(ToastrService);
+  artiService: ArtistasService = inject(ArtistasService)
 
   ENVIAR: number = 0;
+
+  idArtisa: number = 0;
+
   constructor(private http: HttpClient) {
     this.rol = this.logService.getRol();
+
+    var idUsuario = localStorage.getItem("id");
+    console.log("se pierde ", idUsuario);
+
+
+    this.cargarArtistaPorUsuario(Number(idUsuario));
+
+
     console.log(this.rol);
-    this.cargarReservas();
+    console.log(this.newArtista.idArtista);
+   // this.cargarReservas(this.newArtista.idArtista);
   }
 
   handleEventClick(info: any) {
@@ -81,7 +106,7 @@ export class CalendarioComponent {
       next: (data: any) => {
         this.popup.error("Reserva rechaza...", "Rechazada.")
         console.log("cancelada");
-        this.cargarReservas();
+        this.cargarReservas(this.newArtista.idArtista);
 
       }, error: (err: any) => {
         console.error(err);
@@ -100,7 +125,7 @@ export class CalendarioComponent {
         this.popup.success('Reserva Aceptada!', 'Aceptada!');
 
         console.log("aceptada");
-        this.cargarReservas();
+        this.cargarReservas(this.newArtista.idArtista);
 
       }, error: (err: any) => {
         console.error(err);
@@ -114,10 +139,10 @@ export class CalendarioComponent {
     localStorage.removeItem('rol');
   }
 
-  cargarReservas() {
+  cargarReservas(idArtista: number) {
     console.log("aki");
-
-    this.resService.getAllReservasActivas().subscribe((data: any) => {
+    console.log("TOOOOMA ", idArtista)
+    this.resService.getAllReservasActivasPorIdArtista(idArtista).subscribe((data: any) => {
       console.log("aki");
       this.arrReservas = new ReservasMap().get(data);
 
@@ -125,9 +150,16 @@ export class CalendarioComponent {
 
       for (let index = 0; index < this.arrReservas.length; index++) {
         var newobjEvento: objEvento = { idReserva: 0, title: "", start: "" }
-
+        var texto:string="";
+        if (this.arrReservas[index].idEstado==1) {
+          texto="Pendiente";
+        }else if(this.arrReservas[index].idEstado==2){
+          texto="Confirmada";
+        }else{
+          texto="Rechazada";
+        }
         newobjEvento.idReserva = this.arrReservas[index].idReserva;
-        newobjEvento.title = "Cita tatuaje",
+        newobjEvento.title = texto,
           newobjEvento.start = String(this.arrReservas[index].fechaReserva);
         // newobjEvento.start = "2025-04-25";
         this.arrEvents.push(newobjEvento);
@@ -136,6 +168,21 @@ export class CalendarioComponent {
 
       this.calendarOptions.events = this.arrEvents;
     });
+  }
+
+  cargarArtistaPorUsuario(idUsuario: number) {
+    console.log("le llega A LO BUENO ", idUsuario)
+    this.artiService.getAllArtistasByIdUsuario(idUsuario).subscribe({
+      next: (data) => {
+        this.newArtista = new ArtistaSinMap().get(data);
+        console.log(this.newArtista);
+        this.cargarReservas(this.newArtista.idArtista);
+
+      }, error: (err) => {
+        console.log(err);
+      },
+    });
+
   }
 
 

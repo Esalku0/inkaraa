@@ -18,6 +18,10 @@ export class ReservasService {
     return this.httpClient.get("http://localhost:3000/reservasActivas");
   }
 
+  getAllReservasActivasPorIdArtista(idArtista:number) {
+    return this.httpClient.get("http://localhost:3000/reservasActPorArtista/"+idArtista);
+  }
+
   getAllReservasById(idReserva: string) {
     console.log("GET", idReserva);
     console.log(this.API + "/id/" + idReserva);

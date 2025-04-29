@@ -291,8 +291,6 @@ app.post("/usuarios", async (req, res) => {
 //esto nos permite asignar de donde visualizar las imagenes, en este caso, la carpeta assets
 app.use("/assets", express.static(path.join(__dirname, "../assets")));
 
-
-
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------
@@ -506,6 +504,32 @@ app.get("/reservasActivas", (req, res) => {
   });
 });
 
+app.get("/reservasActPorArtista/:idArtista", (req, res) => {
+  console.log("AASDADADADAS");
+  const { idArtista } = req.params;
+  const sql = "SELECT * FROM reservas where idEstado <>3 and idArtista=?";
+  console.log(idArtista);
+  console.log(sql, [idArtista]);
+
+  db.query(sql, [idArtista], (err, results) => {
+    console.log("111111111111");
+    if (err) {
+      res.status(200, err);
+    } else {
+      if (results.length === 0) {
+        console.log("2222222222222222222222");
+
+        res.status(404).send("Longitud erronea, algo ha pasado...");
+      } else {
+        console.log("333333333333333333333333");
+
+        res.json(results);
+        console.log("se ha devuelto todos las reservas correctamente");
+      }
+    }
+  });
+});
+
 app.get("/reservas/id/:idReserva", (req, res) => {
   console.log("ENTREM EN idReserva");
   const { idReserva } = req.params;
@@ -530,19 +554,22 @@ app.get("/reservas/id/:idReserva", (req, res) => {
 app.put("/reservas/estado/:idReserva", (req, res) => {
   console.log("update");
 
-  var sql = "UPDATE reservas SET idEstado = ? WHERE idReserva = ?"; 
-  var body = [req.body.idEstado, req.params.idReserva]; 
+  var sql = "UPDATE reservas SET idEstado = ? WHERE idReserva = ?";
+  var body = [req.body.idEstado, req.params.idReserva];
 
   db.query(sql, body, (err, result) => {
     if (err) {
       console.error("❌ Error al actualizar reserva:", err);
-      return res.status(500).json({ message: "Error al actualizar la reserva", error: err }); 
+      return res
+        .status(500)
+        .json({ message: "Error al actualizar la reserva", error: err });
     }
     console.log("aaa");
-    res.status(200).json({ message: "Reserva actualizada exitosamente", result: result }); 
+    res
+      .status(200)
+      .json({ message: "Reserva actualizada exitosamente", result: result });
   });
 });
-
 
 //---------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------
@@ -553,7 +580,6 @@ app.put("/reservas/estado/:idReserva", (req, res) => {
 //---------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------
-
 
 const storage3 = multer.diskStorage({
   destination: (req, file, cb) => {

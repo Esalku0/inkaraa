@@ -1,4 +1,4 @@
-<div class="popup-overlay" (click)="close()">
+<div [class]="" class="popup-overlay" (click)="close()">
   <div class="popup-content" (click)="$event.stopPropagation()">
     <!-- Evita cerrar al hacer clic dentro -->
     <h2>Reserva del cliente {{ this.newUsuario.nombre }} {{ this.newUsuario.apellidos }}</h2>

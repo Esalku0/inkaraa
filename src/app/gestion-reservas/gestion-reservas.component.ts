@@ -25,6 +25,7 @@ export class GestionReservasComponent {
   newArtista: Artista = { idArtista: 0, nombre: '', apellido: '', alias: '', ciudad: '', foto: '' };
   arratistas: Artista[] = [];
   usuService: UsuariosService = inject(UsuariosService);
+
   newUsu: Usuario = {
     id: 0,
     nombre: '',
@@ -32,7 +33,8 @@ export class GestionReservasComponent {
     email: '',
     contrasena: ''
   };
-  arrUsu:Usuario[]=[];
+
+  arrUsu: Usuario[] = [];
 
   selectedFile: File | "" = "";
   tempPass: string = "";
@@ -41,12 +43,18 @@ export class GestionReservasComponent {
   //Datos para el token de sesión
   rol: string = '';
   logService: LoginService = inject(LoginService);
+  idArtista: number = 0;
 
   router: Router = inject(Router);
+
   constructor(private http: HttpClient) {
     this.rol = this.logService.getRol();
+    var idUsuario= localStorage.getItem("id");
+
     console.log(this.rol);
     this.cargarTodosUsuario();
+
+
   }
 
   cerrarSesion() {
@@ -99,19 +107,20 @@ export class GestionReservasComponent {
     });
   }
 
-  cargarTodosUsuario(){
+  cargarTodosUsuario() {
     console.log("entramos");
-    this.usuService.getAllUsuarios().subscribe((data:any)=>{
-      this.arrUsu= new UsuariosMap().get(data);
+    this.usuService.getAllUsuarios().subscribe((data: any) => {
+      this.arrUsu = new UsuariosMap().get(data);
     });
   }
-  borrarUsuario(id:number){
-    this.usuService.delete(id).subscribe((data:any)=>{
+  
+  borrarUsuario(id: number) {
+    this.usuService.delete(id).subscribe((data: any) => {
       this.cargarTodosUsuario();
     })
   }
 
-  vaciarUsuario(){
+  vaciarUsuario() {
     this.newUsu = {
       id: 0,
       nombre: '',

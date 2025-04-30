@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `artistas` (
 
 -- Volcando datos para la tabla probeta.artistas: ~7 rows (aproximadamente)
 INSERT INTO `artistas` (`idArtista`, `idUsuario`, `nombre`, `apellido`, `alias`, `ciudad`, `foto`) VALUES
-	(32, 13, 'Jose Ignacio', 'De la cruz', 'El macarra', '2342', '/assets/artistas/1744276621086.jpg'),
+	(32, 43, 'Jose Ignacio', 'De la cruz', 'El macarra', '2342', '/assets/artistas/1744276621086.jpg'),
 	(33, 30, 'Jose Andres Dominguez', 'De la Fuente villanueva', 'El makina de la tintaxddddd', 'VALENCIA', '/assets/artistas/1742908769862.png'),
 	(34, 33, '342', 'Martinez', 'Llopi03', '42323', '/assets/artistas/1742908866279.png'),
 	(35, 35, '342', 'Martinez', 'Llopi03', '42323', '/assets/artistas/1742909012480.png'),
@@ -119,18 +119,22 @@ CREATE TABLE IF NOT EXISTS `reservas` (
   CONSTRAINT `reservas_ibfk_1` FOREIGN KEY (`idArtista`) REFERENCES `artistas` (`idArtista`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reservas_ibfk_2` FOREIGN KEY (`idCliente`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `reservas_ibfk_3` FOREIGN KEY (`idEstado`) REFERENCES `estadoreserva` (`idEstado`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla probeta.reservas: ~8 rows (aproximadamente)
+-- Volcando datos para la tabla probeta.reservas: ~12 rows (aproximadamente)
 INSERT INTO `reservas` (`idReserva`, `idArtista`, `idCliente`, `fechaReserva`, `detalles`, `boceto`, `idEstado`) VALUES
 	(6, 33, 43, '2025-05-01 00:00:00', 'mu wapo porfa', '/assets/bocetos/1744880748656.jpg', 1),
 	(7, 33, 43, '2025-04-23 00:00:00', 'El tren infinito', '/assets/bocetos/1745310038628.jpg', 1),
-	(8, 32, 43, '2025-04-23 00:00:00', 'a', '/assets/bocetos/1745310243199.jpg', 1),
+	(8, 32, 43, '2025-04-23 00:00:00', 'a', '/assets/bocetos/1745310243199.jpg', 3),
 	(9, 37, 43, '2025-05-01 00:00:00', 'ff', '/assets/bocetos/1745310311068.png', 1),
 	(10, 37, 43, '2025-05-01 00:00:00', 'ff', '/assets/bocetos/1745310480556.png', 1),
-	(11, 37, 43, '2025-05-01 00:00:00', 'ff', '/assets/bocetos/1745310543301.png', 1),
+	(11, 37, 43, '2025-05-01 00:00:00', 'ff', '/assets/bocetos/1745310543301.png', 3),
 	(12, 37, 43, '2025-05-07 00:00:00', 'jh', '/assets/bocetos/1745310568802.png', 1),
-	(13, 36, 43, '2025-04-23 00:00:00', 'el llopi porfa', '/assets/bocetos/1745310930029.jpg', 1);
+	(13, 36, 43, '2025-04-23 00:00:00', 'el llopi porfa', '/assets/bocetos/1745310930029.jpg', 3),
+	(14, 32, 43, '2025-04-30 00:00:00', '4', '/assets/bocetos/1745498338708.jpg', 1),
+	(15, 32, 43, '2025-04-03 00:00:00', 'HOOOOOOOOOLA', '/assets/bocetos/1745498394859.jpg', 2),
+	(16, 32, 43, '2025-04-24 00:00:00', 'ADIOOOS', '/assets/bocetos/1745498424647.jpg', 1),
+	(17, 32, 43, '2025-04-26 00:00:00', 'GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG', '/assets/bocetos/1745498447319.jpg', 1);
 
 -- Volcando estructura para tabla probeta.roles
 CREATE TABLE IF NOT EXISTS `roles` (
@@ -159,9 +163,9 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   UNIQUE KEY `email` (`email`),
   KEY `usuarios_ibfk_1` (`rol`),
   CONSTRAINT `usuarios_ibfk_1` FOREIGN KEY (`rol`) REFERENCES `roles` (`idRol`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Volcando datos para la tabla probeta.usuarios: ~24 rows (aproximadamente)
+-- Volcando datos para la tabla probeta.usuarios: ~25 rows (aproximadamente)
 INSERT INTO `usuarios` (`id`, `nombre`, `apellidos`, `email`, `contrasena`, `rol`) VALUES
 	(2, 'Ana', 'López Martínez', 'estanis@gmail.com', '1234', 2),
 	(4, 'Juan', 'Martinez', '42323@gmail.com', '23423423', 3),
@@ -186,7 +190,8 @@ INSERT INTO `usuarios` (`id`, `nombre`, `apellidos`, `email`, `contrasena`, `rol
 	(36, '342', 'Martinez', '3453453@gmail.com', '24342', 3),
 	(37, '342', 'Martinez', '444444444@gmail.com', '24342', 3),
 	(38, '342', 'Martinez', '44465444444@gmail.com', '24342', 3),
-	(43, 'arti2', 'arti2', 'arti2@gmail.com', '$2b$10$frDSmUqwhaDw5fO57GHrMuv.7L06Ng9YjR2qcDuauMZHIMV28R6Re', 2);
+	(43, 'arti2', 'arti2', 'arti2@gmail.com', '$2b$10$frDSmUqwhaDw5fO57GHrMuv.7L06Ng9YjR2qcDuauMZHIMV28R6Re', 2),
+	(44, 'usu', 'usu', 'usuario@gmail.com', '$2b$10$Z5.XOlxXNmAGQ2K3NCo6m.0z5/koUMsDbMS5R1WzlcqxBGRSY705q', 1);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

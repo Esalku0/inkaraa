@@ -22,7 +22,7 @@ export const routes: Routes = [
   { path: 'gestionDisenyos', component: GestionDisenyosComponent },
   { path: 'gestionReservas', component: GestionReservasComponent },
   { path: 'verArtista/:id', component: PerfilArtistasComponent },
-  { path: 'gestionArtista', component: PantallaGestionComponentArtista },
+  { path: 'gestionArtista', component: PantallaGestionComponentArtista, canActivate: [AuthGuard] },
   { path: 'VerReservas', component: CalendarioComponent },
  //{ path: 'gestionArtista', component: PantallaGestionComponentArtista,canActivate: [AuthGuard] },
   { path: '**', redirectTo: '' },

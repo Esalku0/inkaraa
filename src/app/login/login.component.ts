@@ -34,8 +34,7 @@ export class LoginComponent {
   }
 
   login() {
-    console.log(this.username);
-    console.log(this.password);
+
     //var dev = this.encryptPassword(this.password);
     this.logService.login(this.username, this.password).subscribe({
       next: (data: any) => {

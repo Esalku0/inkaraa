@@ -1,0 +1,1 @@
+export const ruta:string = "http://192.168.1.23:8080";

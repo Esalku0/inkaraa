@@ -1,0 +1,72 @@
+<header>
+  <div class="container">
+    <div class="logo">
+      <h1>INKARA</h1>
+    </div>
+  </div>
+</header>
+
+<section class="register-section">
+  <div class="register-container">
+    <h2>Regístrate</h2>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        placeholder="Nombre de usuario"
+        required
+        [(ngModel)]="this.newUser.nombre"
+        aria-label="Nombre de usuario"
+      />
+      <input
+      type="text"
+      id="apellido"
+      name="apellido"
+      placeholder="Apellido"
+      required
+      [(ngModel)]="this.newUser.apellidos"
+      aria-label="apellido de usuario"
+    />
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Correo electrónico"
+        [(ngModel)]="this.newUser.email"
+        aria-label="Correo electrónico"
+        required
+        pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$"
+        (blur)="comprobarPatternEmail()"
+      />
+      <input
+        type="password"
+        id="password"
+        name="password"
+        placeholder="Contraseña"
+        required
+        [(ngModel)]="this.newUser.contrasena"
+        aria-label="Contraseña"
+        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{5,12}$"
+        (blur)="comprobarPatternPassword()"
+      />
+      <input
+        type="password"
+        id="confirm-password"
+        name="confirm-password"
+        placeholder="Confirmar contraseña"
+        required
+        [(ngModel)]="confirmPassword"
+        aria-label="Confirmar contraseña"
+      />
+      <button type="submit" (click)="enviar()" class="cta-button">Registrarse</button>
+      <p class="login-link">
+        ¿Ya tienes una cuenta? <a routerLink="/login">Inicia sesión aquí</a>
+      </p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-content">
+    <p>&copy; 2025 Tattoo Studio. Todos los derechos reservados.</p>
+  </div>
+</footer>

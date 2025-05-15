@@ -1,0 +1,13 @@
+-> GENERAL, poner lo mismo de los tokens en todas las paginas.
+
+->ADMIN panel de artistas.
+-GENERAL crear correctamente menu desplegable.
+
+->ARTISTA Crear gestion de disenyos, crearlos.
+->ARTISTA visualizar imagenes de disenyos.
+
+
+->GENERAL poder hacer reservas
+->ARTISTA poder gestionar reservas
+->GENERAL modificar home, mas bonito
+->GENERAL añadir panel de contacto

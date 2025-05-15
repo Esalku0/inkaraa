@@ -1,0 +1,60 @@
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>Inkara</h1>
+      </div>
+    </div>
+  </header>
+
+  <section class="appointment-section">
+    <div class="appointment-container">
+      <h2>Reserva tu Cita</h2>
+
+      <label>Selecciona la fecha:</label>
+      <input
+        type="date"
+        id="date"
+        name="date"
+        required
+        min="2025-03-08"
+        [(ngModel)]="this.newReserva.fechaReserva"
+      />
+      <label>Elige un tatuador:</label>
+      <select
+        name="artist"
+        id="artist"
+        required
+        [(ngModel)]="this.newReserva.idArtista"
+      >
+        <option value="" disabled selected>Elige un tatuador</option>
+        @for (item of this.arrArtistas; track $index) {
+        <option value="{{ item.idArtista }}">
+          {{ item.nombre }} - {{ item.alias }}
+        </option>
+        }
+      </select>
+      <label>Detalles del tatuaje:</label>
+      <textarea
+        id="details"
+        name="details"
+        placeholder="Detalles del tatuaje"
+        required
+        [(ngModel)]="this.newReserva.detalles"
+      >
+      </textarea>
+      <label>Sube un boceto del tatuaje:</label>
+      <input type="file" (change)="onFileSelected($event)" id="foto" />
+
+      <button type="button" class="cta-button" (click)="anyadirReserva()">Reservar Cita</button>
+    </div>
+  </section>
+  
+
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2025 Tattoo Studio. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+</body>

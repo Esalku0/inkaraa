@@ -1,0 +1,10 @@
+{
+  "/api": {
+    "target": "http://fueramoros.rf.gd",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api": ""
+    }
+  }
+}

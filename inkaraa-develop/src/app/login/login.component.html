@@ -1,0 +1,42 @@
+<header>
+  <div class="container">
+    <div class="logo">
+      <h1>Inkara</h1>
+    </div>
+  </div>
+</header>
+
+<section class="login-section">
+  <div class="login-container">
+    <h2>Iniciar Sesión</h2>
+      <input
+        type="text"
+        id="username"
+        name="username"
+        [(ngModel)]="username"
+        placeholder="Nombre de usuario"
+        required
+        aria-label="Nombre de usuario"
+      />
+      <input
+        type="password"
+        id="password"
+        name="password"
+        [(ngModel)]="password"
+        placeholder="Contraseña"
+        required
+        aria-label="Contraseña"
+      />
+      <button  class="cta-button" (click)="login()">Iniciar Sesión</button>
+      <p class="register-link">
+        
+        ¿No tienes una cuenta? <a routerLink="/registro">Regístrate aquí</a>
+      </p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-content">
+    <p>&copy; 2025 Tattoo Studio. Todos los derechos reservados.</p>
+  </div>
+</footer>

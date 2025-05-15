@@ -1,0 +1,19 @@
+<div [class]="" class="popup-overlay" (click)="close()">
+  <div class="popup-content" (click)="$event.stopPropagation()">
+    <!-- Evita cerrar al hacer clic dentro -->
+    <h2>Reserva del cliente {{ this.newUsuario.nombre }} {{ this.newUsuario.apellidos }}</h2>
+    <label><b>Detalles: </b> {{ this.newReserva.detalles }}</label>
+    <br />
+    <label><b>Fecha: </b> {{ this.newReserva.fechaReserva }}</label>
+    <br />
+    <img src="{{ this.newReserva.boceto }}" alt="Diseño 1" />
+
+    <br />
+    <br />
+    <br />
+    <button class="acept" (click)="aceptar()">Aceptar</button>
+    <button class="deneg" (click)="rechazar()">Rechazar</button>
+
+    <button (click)="close()">Cerrar</button>
+  </div>
+</div>

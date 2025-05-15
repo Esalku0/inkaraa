@@ -1,0 +1,96 @@
+<header>
+  <link
+    href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    rel="stylesheet"
+  />
+  <div class="container">
+    <div class="logo">
+      <h1>Inkara</h1>
+    </div>
+    <nav>
+      <ul class="nav-links">
+        <li>
+          <a routerLink="/verDisenyos">
+            <mat-icon>style</mat-icon>
+            <span>Diseños</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/verArtistas">
+            <mat-icon>palette</mat-icon>
+            <span>Artistas</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="#contact">
+            <mat-icon>contact_page</mat-icon>
+            <span>Contacto</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink="ola">
+            <mat-icon>book</mat-icon>
+            <span>Legal</span>
+          </a>
+        </li>
+      @if (tokenNull==true) {
+        <li class="dropdown">
+          <mat-icon class="dropdown-toggle">menu</mat-icon>
+          <ul class="dropdown-menu">
+            <li><a href="#">Ajustes</a></li>
+            <li><a href="#">Mis Cosas</a></li>
+            @if(rol!='3'){
+            <li><a routerLink="/VerReservas">Mis Reservas</a></li>
+            }
+            @if(rol==='2'){
+              <li><a routerLink="/gestionArtista">Gestion Artistas</a></li>
+            }
+            @if(rol==='3'){
+              <li><a routerLink="/gestionReservas">Gestion Reservas</a></li>
+            }
+            @if(rol==='3'){
+              <li><a routerLink="/gestionDisenyos">Gestion Diseños</a></li>
+            }
+            
+            
+            @if(!rol){
+              <li><a routerLink="/login">Login</a></li>
+            }@else {
+              <li><a routerLink="/home" (click)="cerrarSesion()">Cerrar sesion</a></li>
+            }
+          </ul>
+        </li>
+      }@else {
+        <mat-icon class="dropdown-toggle" routerLink="/login" alt="iniciar sesion">man</mat-icon>
+      }
+
+      </ul>
+    </nav>
+  </div>
+</header>
+<body>
+  
+<section id="home" class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h2>Descubre el Arte en tu Piel</h2>
+    <p>Transforma tu cuerpo en una obra de arte única</p>
+    <a routerLink="/verDisenyos" class="cta-button">Ver portafolio</a>
+  </div>
+</section>
+
+<app-carrousel-imagenes></app-carrousel-imagenes>
+
+<a routerLink="/reserva" class="floating-button">Reserva Ahora</a>
+<footer>
+  <div class="footer-content">
+    <p>&copy; 2025 Inkara. Todos los derechos reservados.</p>
+    <div class="social-links">
+      <a href="#"><i class="fab fa-facebook-f"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+    </div>
+  </div>
+</footer>
+
+</body>

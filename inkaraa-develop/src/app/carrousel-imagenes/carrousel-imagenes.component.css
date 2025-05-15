@@ -1,0 +1,31 @@
+body{
+  background-color: #1a1a1a;
+  min-width: 100hv;
+}
+.carousel-container {
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 3 / 2; /* Ajusta proporción */
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+  
+}
+
+.carousel {
+  display: flex;
+  height: 100%;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-item {
+  flex: 0 0 100%;
+  height: 100%;
+}
+
+.carousel-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  display: block;
+}
